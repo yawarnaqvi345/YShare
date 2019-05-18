@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ReceiveActivity">
+    <TextView
+        android:id="@+id/receive_activity_text"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:background="@color/colorGrey"
+        android:text="SELECT FROM FOUND DEVICES"
+        android:visibility="gone"
+
+        />
+    <LinearLayout
+        android:id="@+id/receive_linear_else"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        >
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_marginLeft="10dp"
+            android:id="@+id/receive_animation_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            app:lottie_rawRes="@raw/ripples"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_colorFilter="@color/colorPrimary"
+            />
+        <ListView
+            android:id="@+id/receive_activity_listrview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></ListView>
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/receive_recycler"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

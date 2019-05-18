@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FileSelectActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/send_activity_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <android.support.design.widget.TabLayout
+                android:id="@+id/send_activity_tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorGrey"
+                app:tabTextAppearance="@style/CustomTabText"
+                android:layout_gravity="bottom"
+                app:tabIndicator="@drawable/indicator"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="0dp"
+                app:tabIndicatorGravity="center"
+                app:tabBackground="@drawable/tabindicator"
+                app:tabGravity="fill"
+                textAllCaps = "false"
+                android:outlineSpotShadowColor="@color/buttonbackgrnd"
+                app:tabMode="fixed"
+                app:tabIndicatorColor="@color/colorPrimary">
+                <android.support.design.widget.TabItem
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/apps"
+                    android:text="@string/String_Apps" />
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:tabBackground="@drawable/tabindicator"
+                    android:icon="@drawable/files"
+                    android:text="@string/String_Files" />
+
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/photos"
+                    android:text="@string/String_photos"
+                    />
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/vidos"
+                    android:text="@string/String_videos"
+                    />
+                <android.support.design.widget.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/music"
+                    android:text="@string/String_music"
+                    />
+            </android.support.design.widget.TabLayout>
+
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/selected_display_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_alignParentBottom="false"
+        android:padding="15dp"
+        android:background="@color/colorGrey"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/cross_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="left"
+            android:drawableTint="#00ACC1"
+            android:src="@drawable/ic_clear_black_24dp" />
+
+        <TextView
+            android:id="@+id/num_of_files_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:text="Items selected" />
+
+        <ImageView
+            android:id="@+id/send_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_send_black_24dp" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

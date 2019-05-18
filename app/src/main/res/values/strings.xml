@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">YShare</string>
+    <string name="title_home">Home</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_transfer">Transfers</string>
+    <string name="title_messaging">Messaging</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="String_Apps">Apps</string>
+    <string name="String_Files">Files</string>
+    <string name="String_photos">Photos</string>
+    <string name="String_videos">Videos</string>
+    <string name="String_music">Music</string>
+</resources>
