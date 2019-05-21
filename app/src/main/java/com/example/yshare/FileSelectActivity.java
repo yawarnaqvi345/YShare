@@ -42,11 +42,11 @@ public class FileSelectActivity extends AppCompatActivity {
 
     }
     private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.apps);
-        tabLayout.getTabAt(1).setIcon(R.drawable.files);
-        tabLayout.getTabAt(2).setIcon(R.drawable.photos);
-        tabLayout.getTabAt(3).setIcon(R.drawable.vidos);
-        tabLayout.getTabAt(4).setIcon(R.drawable.music);
+        tabLayout.getTabAt(0).setIcon(R.drawable.photos);
+        tabLayout.getTabAt(1).setIcon(R.drawable.vidos);
+        tabLayout.getTabAt(2).setIcon(R.drawable.music);
+        tabLayout.getTabAt(3).setIcon(R.drawable.files);
+        tabLayout.getTabAt(4).setIcon(R.drawable.apps);
     }
 
     @Override

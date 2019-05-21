@@ -350,6 +350,7 @@ public class FinalSendActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Device Lost", Toast.LENGTH_SHORT).show();
             }
         };
+        Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
         Nearby.getConnectionsClient(FinalSendActivity.this)
                 .startDiscovery(
                         /* serviceId= */ getPackageName(),
