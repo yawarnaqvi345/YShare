@@ -5,12 +5,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.widget.TableLayout;
 
+import com.example.yshare.Fragments.Application;
 import com.example.yshare.Fragments.Files;
 import com.example.yshare.Fragments.Music;
 import com.example.yshare.Fragments.Photos;
-import com.example.yshare.Fragments.ShareApplication;
 import com.example.yshare.Fragments.Videos;
 import com.example.yshare.R;
 
@@ -22,7 +21,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public ViewPagerAdapter(Context cntxt, FragmentManager fm) {
         super(fm);
         mContext = cntxt;
-        apps = new ShareApplication();
+        apps = new Application();
         files = new Files();
         photos = new Photos();
         videos = new Videos();

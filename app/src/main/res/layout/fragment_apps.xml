@@ -3,18 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.ShareApplication">
+    tools:context=".Fragments.Application">
 
     <!-- TODO: Update blank fragment layout -->
-    <GridView
-        android:id="@+id/apps_gridview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <!-- <GridView
+         android:id="@+id/apps_gridview"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:layout_margin="5dp"
+         android:gravity="center"
+         android:horizontalSpacing="7dp"
+         android:numColumns="4"
+         android:verticalSpacing="15dp"></GridView>-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/apps_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:gravity="center"
-        android:horizontalSpacing="7dp"
-        android:numColumns="4"
-        android:verticalSpacing="15dp"></GridView>
+        android:gravity="center"></android.support.v7.widget.RecyclerView>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"

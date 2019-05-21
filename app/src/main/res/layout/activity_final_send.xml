@@ -11,15 +11,67 @@
         android:id="@+id/finalshare_activity_text"
         android:layout_width="match_parent"
         android:padding="10dp"
+
         android:layout_gravity="top"
         android:layout_height="50dp"
+        android:elevation="5dp"
         android:textAlignment="center"
         android:background="@color/colorGrey"
-        android:text="Searching for the device"
+        android:text="@string/searching"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/finalshare_recycler"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/send_animation_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_autoPlay="true"
+            app:lottie_colorFilter="@color/colorPrimary"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/send" />
+
+        <RelativeLayout
+            android:id="@+id/layout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="150dp"></RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="150dp"
+            android:layout_marginRight="80dp"></RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="80dp"
+            android:layout_marginBottom="150dp"></RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="80dp"
+            android:layout_marginBottom="150dp"></RelativeLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

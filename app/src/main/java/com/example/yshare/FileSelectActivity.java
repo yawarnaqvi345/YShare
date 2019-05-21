@@ -1,17 +1,20 @@
 package com.example.yshare;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.yshare.Adapters.ViewPagerAdapter;
@@ -19,6 +22,8 @@ import com.example.yshare.strucmodels.FileToSendPath;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.graphics.Color.WHITE;
 
 public class FileSelectActivity extends AppCompatActivity {
     final String TAG = "FileSelectActivity";
@@ -42,7 +47,6 @@ public class FileSelectActivity extends AppCompatActivity {
         tabLayout.getTabAt(2).setIcon(R.drawable.photos);
         tabLayout.getTabAt(3).setIcon(R.drawable.vidos);
         tabLayout.getTabAt(4).setIcon(R.drawable.music);
-        ;
     }
 
     @Override
@@ -51,14 +55,36 @@ public class FileSelectActivity extends AppCompatActivity {
         Log.d(TAG, "OnCreate");
         setContentView(R.layout.activity_file_select);
         setTitle("Files");
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.send_activity_view_pager);
+        final ViewPager viewPager = findViewById(R.id.send_activity_view_pager);
         final ViewPagerAdapter adapter = new ViewPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
-       tabLayout = (TabLayout) findViewById(R.id.send_activity_tab_layout);
+        tabLayout = findViewById(R.id.send_activity_tab_layout);
 
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                Drawable ic = tab.getIcon();
+                ic.setTint(WHITE);
+            }
+
+            @SuppressLint("ResourceAsColor")
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                Drawable ic = tab.getIcon();
+                ic.setTint(R.color.colorGrey);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         setupTabIcons();
-        selectedDisplayLayout=(LinearLayout)findViewById(R.id.selected_display_layout);
+        selectedDisplayLayout = findViewById(R.id.selected_display_layout);
         numOfFilesSelected=findViewById(R.id.num_of_files_selected);
         crossButton=findViewById(R.id.cross_button);
         sendButton=findViewById(R.id.send_button);

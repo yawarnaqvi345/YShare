@@ -12,6 +12,7 @@ import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -19,7 +20,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -261,7 +261,7 @@ public class ReceiveActivity extends AppCompatActivity {
                 // Get the received file (which will be in the Downloads folder)
                 File payloadFile = filePayload.asFile().asJavaFile();
                 File root = Environment.getExternalStorageDirectory();
-                File f=new File(root.getAbsolutePath(),"Share");
+                File f = new File(root.getAbsolutePath(), "YShare");
                 if(!f.isDirectory())
                     f.mkdir();
                 // Rename the file.
@@ -366,9 +366,9 @@ public class ReceiveActivity extends AppCompatActivity {
                             final Dialog dialog = new Dialog(ReceiveActivity.this);
                             dialog.setContentView(R.layout.dialogue_layout);
                             dialog.setTitle(title);
-                            final ImageView buttonPlayPause = (ImageView) dialog.findViewById(R.id.play_button);
+                            final ImageView buttonPlayPause = dialog.findViewById(R.id.play_button);
                             buttonPlayPause.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
-                            seekBarProgress = (SeekBar) dialog.findViewById(R.id.seek_bar);
+                            seekBarProgress = dialog.findViewById(R.id.seek_bar);
                             seekBarProgress.setProgress(0);
                             seekBarProgress.setMax(100);
                             seekBarProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

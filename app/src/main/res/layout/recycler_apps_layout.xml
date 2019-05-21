@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/ic_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp">
+
+        <CheckBox
+            android:id="@+id/apps_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/imageview_app_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="15dp"
+        android:layout_toRightOf="@+id/apps_checkbox"
+        android:src="@drawable/ic_launcher_foreground"
+
+        />
+
+        <TextView
+            android:id="@+id/textview_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="15dp"
+            android:layout_toRightOf="@+id/imageview_app_icon"
+            android:maxLength="8"
+            android:text="noNamw" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/border_bottom"></LinearLayout>
+
+</RelativeLayout>

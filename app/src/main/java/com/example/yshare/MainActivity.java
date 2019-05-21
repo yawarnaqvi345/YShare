@@ -1,5 +1,6 @@
 package com.example.yshare;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,6 +15,7 @@ import com.example.yshare.Fragments.Transfer;
 public class MainActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+    Permissions runtimePermissionHelper;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -49,10 +51,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        if (Build.VERSION.SDK_INT >= 23) {
+            runtimePermissionHelper = Permissions.getInstance(this);
+            if (runtimePermissionHelper.isAllPermissionAvailable()) {
+            } else {
+                runtimePermissionHelper.setActivity(this);
+                runtimePermissionHelper.requestPermissionsIfDenied();
+            }
+        }
+
+        mTextMessage = findViewById(R.id.message);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_section, new Transfer()).commit();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (Build.VERSION.SDK_INT >= 23) {
+            runtimePermissionHelper = Permissions.getInstance(this);
+            if (runtimePermissionHelper.isAllPermissionAvailable()) {
+            } else {
+                runtimePermissionHelper.setActivity(this);
+                runtimePermissionHelper.requestPermissionsIfDenied();
+            }
+        }
     }
 
 }

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,19 +33,14 @@ import com.example.yshare.strucmodels.Image;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class Photos extends Fragment {
     RecyclerView mRecyclerView;
    LinearLayout photoLinearLayout;
    RelativeLayout progress;
+    private SimpleArrayMap<Integer, Boolean> ifSelected = new SimpleArrayMap<>();
     private List<Image> imagesList=new ArrayList<>();
     public Photos() {
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,8 +59,9 @@ public class Photos extends Fragment {
         ArrayList<String> listOfAllImages = new ArrayList<String>();
         String absolutePathOfImage = null;
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.MediaColumns.DATA,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+        String[] projection = {MediaStore.MediaColumns.DATA/*,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME*/, MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.TITLE};
         String sortOrder=MediaStore.MediaColumns.DATE_MODIFIED+" DESC";
         cursor = getContext().getContentResolver().query(
                 uri, // Uri
@@ -72,22 +69,20 @@ public class Photos extends Fragment {
                 null,
                 null,
                 sortOrder);
-
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         column_index_folder_name = cursor
                 .getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
         while (cursor.moveToNext()) {
             int title = cursor.getColumnIndex(MediaStore.Images.Media.TITLE);
-            int dt=cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
+            //  int dt=cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
             //absolutePathOfImage = cursor.getString(column_index_data);
             Image img=new Image();
             img.setPath(cursor.getString(column_index_data));
             img.setTitle(cursor.getString(title));
-//            img.setLastModified( new Date(Long.parseLong(cursor.getString(dt))));
+            //   img.setLastModified( new Date(Long.parseLong(cursor.getString(dt))));
             mList.add(img);
             //listOfAllImages.add(absolutePathOfImage);
         }
-       // Collections.sort(mList);
         return mList;
     }
     public class ImageAdapter extends RecyclerView.Adapter<MyViewHolder> {
@@ -96,7 +91,6 @@ public class Photos extends Fragment {
             context = localContext;
             imagesList = imags;
         }
-
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -121,8 +115,6 @@ public class Photos extends Fragment {
                     startActivity(in);
                 }
             });
-
-
             myViewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -140,16 +132,11 @@ public class Photos extends Fragment {
                     FileSelectActivity.UpdateView();
                 }
             });
-
-
         }
-
         @Override
         public int getItemCount() {
             return imagesList.size();
         }
-
-
     }
     class MyViewHolder extends  RecyclerView.ViewHolder{
         ImageView imgThumb;
@@ -169,7 +156,6 @@ public class Photos extends Fragment {
         }
         return null;
    }
-
     private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
         ArrayList<AppIication> appList;
         @Override

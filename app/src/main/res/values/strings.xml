@@ -12,4 +12,14 @@
     <string name="String_photos">Photos</string>
     <string name="String_videos">Videos</string>
     <string name="String_music">Music</string>
+    <string name="searching">Searching for the devices</string>
+    <string name="requesting">Requesting </string>
+    <string name="connection"> to accept connection</string>
+    <string name="start">Start</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="permission_message">Location and stoarage permissions are required to find nearby devices and to access and store received files.</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

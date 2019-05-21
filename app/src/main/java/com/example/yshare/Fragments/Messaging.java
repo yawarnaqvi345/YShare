@@ -1,14 +1,11 @@
 package com.example.yshare.Fragments;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.design.circularreveal.CircularRevealHelper;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AlertDialog;
@@ -96,7 +93,7 @@ public class Messaging extends Fragment {
         connectButton=rootView.findViewById(R.id.connect_button);
         textRecycler=rootView.findViewById(R.id.text_recycler);
         textRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        messageTextView=(EditText) rootView.findViewById(R.id.message_text);
+        messageTextView = rootView.findViewById(R.id.message_text);
         sendButton=rootView.findViewById(R.id.send_message_button);
         writeMessageLayout=rootView.findViewById(R.id.write_message_layout);
 
@@ -127,25 +124,29 @@ public class Messaging extends Fragment {
             @Override
             public void onClick(View v) {
                 // Editable str=messageTextView.getText();
-                String messa = String.valueOf(messageTextView.getText());
-                messageTextView.setText("");
-                TextMessage tex=new TextMessage();
-                tex.setSender("me");
-                tex.setText(messa);
-                textList.add(tex);
-                if(index==0){
-                    myAdapter=new MyRecyclerAdapter(textList);
-                    textRecycler.setAdapter(myAdapter);
-                    textRecycler.setVisibility(View.VISIBLE);
-                    //myAdapter.notifyDataSetChanged();
-                    index++;}else {
-                    myAdapter.notifyDataSetChanged();
-                    textRecycler.scrollToPosition(textList.size()-1);}
+                if (messageTextView.getText().length() > 1) {
+                    String messa = String.valueOf(messageTextView.getText());
+                    messageTextView.setText("");
+                    TextMessage tex = new TextMessage();
+                    tex.setSender("me");
+                    tex.setText(messa);
+                    textList.add(tex);
+                    if (index == 0) {
+                        myAdapter = new MyRecyclerAdapter(textList);
+                        textRecycler.setAdapter(myAdapter);
+                        textRecycler.setVisibility(View.VISIBLE);
+                        //myAdapter.notifyDataSetChanged();
+                        index++;
+                    } else {
+                        myAdapter.notifyDataSetChanged();
+                        textRecycler.scrollToPosition(textList.size() - 1);
+                    }
 
-                Payload filenameBytesPayload =
-                        Payload.fromBytes(messa.getBytes(StandardCharsets.UTF_8));
+                    Payload filenameBytesPayload =
+                            Payload.fromBytes(messa.getBytes(StandardCharsets.UTF_8));
 
-                Nearby.getConnectionsClient(getContext()).sendPayload(id, filenameBytesPayload);
+                    Nearby.getConnectionsClient(getContext()).sendPayload(id, filenameBytesPayload);
+                }
 
             }
         });
@@ -386,8 +387,8 @@ public class Messaging extends Fragment {
         CardView txtCardView;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            messageText=(TextView) itemView.findViewById(R.id.message_text);
-            txtCardView=(CardView) itemView.findViewById(R.id.text_rec_cardview);
+            messageText = itemView.findViewById(R.id.message_text);
+            txtCardView = itemView.findViewById(R.id.text_rec_cardview);
         }
     }
     class MyDevRecyclerAdapter extends RecyclerView.Adapter<MyDevViewHolder>{

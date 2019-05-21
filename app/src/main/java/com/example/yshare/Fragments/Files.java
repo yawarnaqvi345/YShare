@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.yshare.FileSelectActivity;
 import com.example.yshare.R;
 import com.example.yshare.strucmodels.FileToSendPath;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class Files extends Fragment {
         fileRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         progress=rootView.findViewById(R.id.file_loadingPanel);
         new AsyncTaskRunner().execute();*/
-        m_RootList=(ListView) rootView.findViewById(R.id.rl_lvListRoot1);
+        m_RootList = rootView.findViewById(R.id.rl_lvListRoot1);
         getDirFromRoot(m_root);
         return rootView;
     }
@@ -176,10 +177,10 @@ public class Files extends Fragment {
                 LayoutInflater m_inflater = LayoutInflater.from(m_context);
                 m_view = m_inflater.inflate(R.layout.file_explorer_list_item, null);
                 m_viewHolder = new ListAdapter.ViewHolder();
-                m_viewHolder.m_tvFileName = (TextView) m_view.findViewById(R.id.lr_tvFileName);
-                m_viewHolder.m_tvDate = (TextView) m_view.findViewById(R.id.lr_tvdate);
-                m_viewHolder.m_ivIcon = (ImageView) m_view.findViewById(R.id.lr_ivFileIcon);
-                m_viewHolder.m_cbCheck = (CheckBox) m_view.findViewById(R.id.lr_cbCheck);
+            m_viewHolder.m_tvFileName = m_view.findViewById(R.id.lr_tvFileName);
+            m_viewHolder.m_tvDate = m_view.findViewById(R.id.lr_tvdate);
+            m_viewHolder.m_ivIcon = m_view.findViewById(R.id.lr_ivFileIcon);
+            m_viewHolder.m_cbCheck = m_view.findViewById(R.id.lr_cbCheck);
                 m_view.setTag(m_viewHolder);
          //   }
 //            else
@@ -219,7 +220,7 @@ public class Files extends Fragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        m_selectedItem.remove(m_selectedItem.indexOf(p_position));
+                        m_selectedItem.remove(p_position);
                         FileToSendPath path=new FileToSendPath();
                         path.setPath(m_path.get(p_position));
                         path.setType("File");
@@ -255,7 +256,7 @@ public class Files extends Fragment {
             int m_lastIndex=m_file.getAbsolutePath().lastIndexOf(".");
             String m_filepath=m_file.getAbsolutePath();
             if (m_file.isDirectory())
-                return R.drawable.ic_folder_yellow_24dp;
+                return R.drawable.folder;
             else
             {
                 if(m_filepath.substring(m_lastIndex).equalsIgnoreCase(".png"))

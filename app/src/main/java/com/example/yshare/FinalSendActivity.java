@@ -1,27 +1,26 @@
 package com.example.yshare;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.util.SimpleArrayMap;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.yshare.strucmodels.FileToSendPath;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
@@ -51,109 +50,13 @@ public class FinalSendActivity extends AppCompatActivity {
     List<FileToSendPath> mPathsList;
     Payload filePayload;
     String connectedDeviceId;
+    LottieAnimationView animation;
     Uri uri;
+    RelativeLayout mainDiscoveryLayout;
     RecyclerView recyclerView;
     private SimpleArrayMap<Long, Integer> recyclerIdPosition = new SimpleArrayMap<>();
     private SimpleArrayMap<String, String> deviceName = new SimpleArrayMap<>();
     MyAdapter myAdapter;
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_final_send);
-        setTitle("Send");
-        mPathsList=FileSelectActivity.mPathsList;
-        recyclerView=findViewById(R.id.finalshare_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        myAdapter=new MyAdapter();
-        recyclerView.setAdapter(myAdapter);
-        finalshareTextView=findViewById(R.id.finalshare_activity_text);
-
-        EndpointDiscoveryCallback mEndpointDiscoveryCallback = new EndpointDiscoveryCallback() {
-            @Override
-            public void onEndpointFound(final String s, final DiscoveredEndpointInfo discoveredEndpointInfo) {
-                deviceName.put(s,discoveredEndpointInfo.getEndpointName());
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FinalSendActivity.this);
-                alertDialogBuilder.setMessage("Found a device named "+discoveredEndpointInfo.getEndpointName()+": Do you want to sent to this device?");
-                alertDialogBuilder.setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                Nearby.getConnectionsClient(FinalSendActivity.this)
-                                        .requestConnection(
-                                                /* endpointName= */ discoveredEndpointInfo.getEndpointName(),
-                                                s,
-                                                mConnectionLifecycleCallback).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getApplicationContext(), "Connection Requested", Toast.LENGTH_SHORT).show();
-                                        Nearby.getConnectionsClient(FinalSendActivity.this)
-                                                .stopDiscovery();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(), "on faliure connection", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                                OnFailureListener onFailureListener=new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-
-                                    }
-                                };
-                            }
-                        });
-
-                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        finish();
-                    }
-                });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-                Toast.makeText(getApplicationContext(), "onEndpointFound", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onEndpointLost(String s) {
-//                int b = 54;
-                Toast.makeText(getApplicationContext(), "onEndpointLost", Toast.LENGTH_SHORT).show();
-                Snackbar.make(view, "onEndpointLost", Snackbar.LENGTH_SHORT).show();
-
-            }
-        };
-        Nearby.getConnectionsClient(FinalSendActivity.this)
-                .startDiscovery(
-                        /* serviceId= */ getPackageName(),
-                        mEndpointDiscoveryCallback,new DiscoveryOptions.Builder().setStrategy(Strategy.P2P_POINT_TO_POINT).build());
-        // new DiscoveryOptions(Strategy.P2P_POINT_TO_POINT));
-    }
-
-    @Override
-    protected void onDestroy() {
-        Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.finish();
-        //mPathsList.clear();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        if(connectedDeviceId!=null)
-//            Nearby.getConnectionsClient(FinalShareActivity.this).disconnectFromEndpoint(connectedDeviceId);
-//        Nearby.getConnectionsClient(FinalShareActivity.this).stopDiscovery();
-    }
-
     private final ConnectionLifecycleCallback mConnectionLifecycleCallback = new ConnectionLifecycleCallback() {
         @Override
         public void onConnectionInitiated(String s, ConnectionInfo connectionInfo) {
@@ -169,6 +72,10 @@ public class FinalSendActivity extends AppCompatActivity {
                 case ConnectionsStatusCodes.STATUS_OK:
                     finalshareTextView.setText("connected to "+deviceName.get(s));
                     connectedDeviceId=s;
+                    finalshareTextView.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    mainDiscoveryLayout.setVisibility(View.GONE);
+                    animation.setVisibility(View.GONE);
                     int index=0;
                     for(FileToSendPath path:mPathsList){
                         uri= Uri.fromFile(new File(mPathsList.get(index).getPath()));
@@ -230,6 +137,225 @@ public class FinalSendActivity extends AppCompatActivity {
 
         }
     };
+    int index = 0;
+
+    @Override
+    protected void onDestroy() {
+        Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+        //mPathsList.clear();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        if(connectedDeviceId!=null)
+//            Nearby.getConnectionsClient(FinalShareActivity.this).disconnectFromEndpoint(connectedDeviceId);
+//        Nearby.getConnectionsClient(FinalShareActivity.this).stopDiscovery();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_final_send);
+        setTitle("Send");
+        mainDiscoveryLayout = findViewById(R.id.layout_main);
+        animation = findViewById(R.id.send_animation_view);
+        mPathsList = FileSelectActivity.mPathsList;
+        recyclerView = findViewById(R.id.finalshare_recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        myAdapter = new MyAdapter();
+        recyclerView.setAdapter(myAdapter);
+        finalshareTextView = findViewById(R.id.finalshare_activity_text);
+
+        EndpointDiscoveryCallback mEndpointDiscoveryCallback = new EndpointDiscoveryCallback() {
+            @Override
+            public void onEndpointFound(final String s, final DiscoveredEndpointInfo discoveredEndpointInfo) {
+                deviceName.put(s, discoveredEndpointInfo.getEndpointName());
+              /*  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FinalSendActivity.this);
+                alertDialogBuilder.setMessage("Found a device named "+discoveredEndpointInfo.getEndpointName()+": Do you want to sent to this device?");
+                alertDialogBuilder.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                Nearby.getConnectionsClient(FinalSendActivity.this)
+                                        .requestConnection(
+                                                *//* endpointName= *//* discoveredEndpointInfo.getEndpointName(),
+                                                s,
+                                                mConnectionLifecycleCallback).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(), "Connection Requested", Toast.LENGTH_SHORT).show();
+                                        Nearby.getConnectionsClient(FinalSendActivity.this)
+                                                .stopDiscovery();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "on faliure connection", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                            }
+                        });
+
+                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        finish();
+                    }
+                });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();*/
+                // Toast.makeText(getApplicationContext(), "onEndpointFound", Toast.LENGTH_SHORT).show();
+                switch (index) {
+                    case 0:
+                        RelativeLayout container = findViewById(R.id.layout1);
+                        View inflatedLayout = getLayoutInflater().inflate(R.layout.device_layout, null, false);
+                        TextView tx = inflatedLayout.findViewById(R.id.found_dev_name);
+                        inflatedLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Nearby.getConnectionsClient(FinalSendActivity.this)
+                                        .requestConnection(
+                                                /* endpointName= */ discoveredEndpointInfo.getEndpointName(),
+                                                s,
+                                                mConnectionLifecycleCallback).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(), "Connection Requested", Toast.LENGTH_SHORT).show();
+                                        Nearby.getConnectionsClient(FinalSendActivity.this)
+                                                .stopDiscovery();
+                                        finalshareTextView.setText(R.string.requesting + discoveredEndpointInfo.getEndpointName() + R.string.connection);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "on faliure connection", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                        tx.setText(discoveredEndpointInfo.getEndpointName());
+                        container.addView(inflatedLayout);
+                        index++;
+                        break;
+                    case 1:
+                        RelativeLayout container2 = findViewById(R.id.layout4);
+                        View inflatedLayout2 = getLayoutInflater().inflate(R.layout.device_layout, null, false);
+                        TextView tx2 = inflatedLayout2.findViewById(R.id.found_dev_name);
+                        tx2.setText(s);
+                        inflatedLayout2.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Nearby.getConnectionsClient(FinalSendActivity.this)
+                                        .requestConnection(
+                                                /* endpointName= */ discoveredEndpointInfo.getEndpointName(),
+                                                s,
+                                                mConnectionLifecycleCallback).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(), "Connection Requested", Toast.LENGTH_SHORT).show();
+                                        Nearby.getConnectionsClient(FinalSendActivity.this)
+                                                .stopDiscovery();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "on faliure connection", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                        container2.addView(inflatedLayout2);
+                        index++;
+                        break;
+                    case 2:
+                        RelativeLayout container3 = findViewById(R.id.layout3);
+                        View inflatedLayout3 = getLayoutInflater().inflate(R.layout.device_layout, null, false);
+                        TextView tx3 = inflatedLayout3.findViewById(R.id.found_dev_name);
+                        tx3.setText(s);
+                        inflatedLayout3.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Nearby.getConnectionsClient(FinalSendActivity.this)
+                                        .requestConnection(
+                                                /* endpointName= */ discoveredEndpointInfo.getEndpointName(),
+                                                s,
+                                                mConnectionLifecycleCallback).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(), "Connection Requested", Toast.LENGTH_SHORT).show();
+                                        Nearby.getConnectionsClient(FinalSendActivity.this)
+                                                .stopDiscovery();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "on faliure connection", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                        container3.addView(inflatedLayout3);
+                        index++;
+                        break;
+                    case 3:
+                        RelativeLayout container4 = findViewById(R.id.layout2);
+                        View inflatedLayout4 = getLayoutInflater().inflate(R.layout.device_layout, null, false);
+                        TextView tx4 = inflatedLayout4.findViewById(R.id.found_dev_name);
+                        tx4.setText(s);
+                        inflatedLayout4.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Nearby.getConnectionsClient(FinalSendActivity.this)
+                                        .requestConnection(
+                                                /* endpointName= */ discoveredEndpointInfo.getEndpointName(),
+                                                s,
+                                                mConnectionLifecycleCallback).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(getApplicationContext(), "Connection Requested", Toast.LENGTH_SHORT).show();
+                                        Nearby.getConnectionsClient(FinalSendActivity.this)
+                                                .stopDiscovery();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(getApplicationContext(), "on faliure connection", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        });
+                        container4.addView(inflatedLayout4);
+                        index++;
+                        break;
+                    default:
+                        break;
+                }
+
+
+            }
+
+            @Override
+            public void onEndpointLost(String s) {
+                Toast.makeText(getApplicationContext(), "Device Lost", Toast.LENGTH_SHORT).show();
+            }
+        };
+        Nearby.getConnectionsClient(FinalSendActivity.this)
+                .startDiscovery(
+                        /* serviceId= */ getPackageName(),
+                        mEndpointDiscoveryCallback, new DiscoveryOptions.Builder().setStrategy(Strategy.P2P_POINT_TO_POINT).build());
+        // new DiscoveryOptions(Strategy.P2P_POINT_TO_POINT));
+    }
     PayloadCallback mPayLoadCallback=new PayloadCallback() {
         @Override
         public void onPayloadReceived(String s, Payload payload) {
