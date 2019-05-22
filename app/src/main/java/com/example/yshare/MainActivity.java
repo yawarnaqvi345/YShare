@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFrag = null;
             switch (item.getItemId()) {
+                
                 case R.id.navigation_transfer:
                     selectedFrag = new Transfer();
                     break;
