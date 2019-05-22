@@ -1,4 +1,13 @@
 <resources>
+
+    <!--TODO: test ads ids-->
+    <string name="interstial">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="Banner">ca-app-pub-3940256099942544/6300978111</string>
+    <!--TODO: original ads ids-->
+    <!-- <string name="Banner">ca-app-pub-7294466580019091/1872864692</string>
+     <string name="interstial">ca-app-pub-7294466580019091/7152933926</string>-->
+
+
     <string name="app_name">YShare</string>
     <string name="title_home">Home</string>
     <string name="title_notifications">Notifications</string>
@@ -21,5 +30,16 @@
     <string name="permission_message">Location and stoarage permissions are required to find nearby devices and to access and store received files.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="call">Call</string>
+    <string name="step_1">Step 1</string>
+    <string name="step_2">Step 2</string>
+    <string name="select_next_button">Select Next Button</string>
+    <string name="select_send_button">Select Send Button</string>
+    <string name="step_3">Step 3</string>
+    <string name="details_3">Select any file, app, image, music  or video which you want to share</string>
+    <string name="step_4">Step 4</string>
+    <string name="details_4">Your selected file will be send to another device.</string>
+    <string name="step_5">Step 5</string>
+    <string name="details_5">You will receive file from sender.</string>
 
 </resources>

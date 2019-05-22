@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.Messaging">
+
+    <Button
+        android:id="@+id/mbutton_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="3dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="20dp"
+        android:text="call"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/mbutton_rec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="3dp"
+        android:layout_toRightOf="@id/mbutton_call"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="20dp"
+        android:text="recieve"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/mbutton_discover_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="3dp"
+        android:layout_weight="1"
+        android:background="@drawable/round_button"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="20dp"
+        android:text="Discover" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/search_animation_call"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"
+        app:lottie_autoPlay="true"
+        app:lottie_colorFilter="@color/colorPrimary"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/ripples" />
+
+    <LinearLayout
+        android:id="@+id/search_layout_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="searching" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/dev_found_recycler_call"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dev_info_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/dev_name_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#CCCCC6"
+            android:padding="20dp"
+            android:text="Device"
+            android:textAlignment="center"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/connect_button_call_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:layout_toRightOf="@+id/button_broadcast"
+            android:background="@drawable/round_button"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="Connect"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+</RelativeLayout>

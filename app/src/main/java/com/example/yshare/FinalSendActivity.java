@@ -148,6 +148,7 @@ public class FinalSendActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
         this.finish();
         //mPathsList.clear();
     }
@@ -155,9 +156,8 @@ public class FinalSendActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-//        if(connectedDeviceId!=null)
-//            Nearby.getConnectionsClient(FinalShareActivity.this).disconnectFromEndpoint(connectedDeviceId);
-//        Nearby.getConnectionsClient(FinalShareActivity.this).stopDiscovery();
+        Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
+
     }
 
     @Override
@@ -178,44 +178,7 @@ public class FinalSendActivity extends AppCompatActivity {
             @Override
             public void onEndpointFound(final String s, final DiscoveredEndpointInfo discoveredEndpointInfo) {
                 deviceName.put(s, discoveredEndpointInfo.getEndpointName());
-              /*  AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(FinalSendActivity.this);
-                alertDialogBuilder.setMessage("Found a device named "+discoveredEndpointInfo.getEndpointName()+": Do you want to sent to this device?");
-                alertDialogBuilder.setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                Nearby.getConnectionsClient(FinalSendActivity.this)
-                                        .requestConnection(
-                                                *//* endpointName= *//* discoveredEndpointInfo.getEndpointName(),
-                                                s,
-                                                mConnectionLifecycleCallback).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(getApplicationContext(), "Connection Requested", Toast.LENGTH_SHORT).show();
-                                        Nearby.getConnectionsClient(FinalSendActivity.this)
-                                                .stopDiscovery();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getApplicationContext(), "on faliure connection", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
 
-                            }
-                        });
-
-                alertDialogBuilder.setNegativeButton("No",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        finish();
-                    }
-                });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();*/
-                // Toast.makeText(getApplicationContext(), "onEndpointFound", Toast.LENGTH_SHORT).show();
                 switch (index) {
                     case 0:
                         RelativeLayout container = findViewById(R.id.layout1);

@@ -2,6 +2,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="8dp"
     android:orientation="horizontal" >
 
     <CheckBox
@@ -15,8 +16,9 @@
 
     <ImageView
         android:id="@+id/lr_ivFileIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="5dp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/lr_cbCheck"
         android:src="@drawable/ic_launcher_foreground"

@@ -211,7 +211,6 @@ public class Files extends Fragment {
                         path.setType("File");
                         FileSelectActivity.mPathsList.add(path);
                         FileSelectActivity.UpdateView();
-
                     }
                     else
                     {

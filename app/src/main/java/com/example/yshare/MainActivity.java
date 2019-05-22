@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.yshare.Fragments.Call;
 import com.example.yshare.Fragments.Messaging;
 import com.example.yshare.Fragments.Transfer;
 
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_messaging:
                     selectedFrag=new Messaging();
+                case R.id.navigation_call:
+                    selectedFrag = new Call();
             }
 //            switch (item.getItemId()) {
 //                case R.id.navigation_home:

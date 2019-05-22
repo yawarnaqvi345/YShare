@@ -17,7 +17,7 @@
         app:layout_collapseMode="parallax" />
 
     <LinearLayout
-        android:id="@+id/layoutDots"
+        android:id="@+id/layoutDots" 
         android:layout_width="match_parent"
         android:layout_height="@dimen/dots_height"
         android:layout_alignParentBottom="true"

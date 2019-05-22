@@ -6,7 +6,7 @@
     android:background="@drawable/ambient"
     android:orientation="vertical">
 
-    <RelativeLayout
+  <RelativeLayout
         android:id="@+id/call_info_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

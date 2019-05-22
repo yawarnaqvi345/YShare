@@ -5,7 +5,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="10dp"  
         android:background="@color/colorGrey"
         android:layout_centerInParent="true">
     <ImageView

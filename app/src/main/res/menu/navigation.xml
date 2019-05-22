@@ -6,11 +6,10 @@
         android:icon="@drawable/transfer"
         android:title="@string/title_transfer" />
 
-  <!--  <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
--->
+    <item
+        android:id="@+id/navigation_call"
+        android:icon="@drawable/ic_call_green_24dp"
+        android:title="@string/call" />
     <item
         android:id="@+id/navigation_messaging"
         android:icon="@drawable/text_messaging"
