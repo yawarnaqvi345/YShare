@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
-    android:orientation="vertical" 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -13,12 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical"/>
+        android:orientation="vertical" />
+
+    <include
+        android:id="@+id/banner"
+        layout="@layout/banner" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
         app:menu="@menu/navigation" />
 

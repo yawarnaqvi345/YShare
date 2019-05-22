@@ -104,9 +104,15 @@ public class Photos extends Fragment {
         public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
             myViewHolder.checkBox.setChecked(false);
             myViewHolder.info.setText(imagesList.get(i).getTitle());
-            Glide.with(context).load(imagesList.get(i).getPath())
-                    .placeholder(R.drawable.ic_launcher_foreground).centerCrop()
-                    .into(myViewHolder.imgThumb);
+
+            try {
+                Glide.with(context).load(imagesList.get(i).getPath())
+                        .placeholder(R.drawable.ic_launcher_foreground).centerCrop()
+                        .into(myViewHolder.imgThumb);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             myViewHolder.imgThumb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

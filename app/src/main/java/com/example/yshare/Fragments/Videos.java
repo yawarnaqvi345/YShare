@@ -1,4 +1,5 @@
 package com.example.yshare.Fragments;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -21,11 +22,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.example.yshare.FileSelectActivity;
 import com.example.yshare.R;
 import com.example.yshare.strucmodels.FileToSendPath;
 import com.example.yshare.strucmodels.Video;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,9 +70,13 @@ public class Videos extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
-            Glide.with(context).load(videosList.get(i).getPath())
-                    .placeholder(R.drawable.ic_launcher_foreground).centerCrop()
-                    .into(myViewHolder.vidThumb);
+            try {
+                Glide.with(context).load(videosList.get(i).getPath())
+                        .placeholder(R.drawable.ic_launcher_foreground).centerCrop()
+                        .into(myViewHolder.vidThumb);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             myViewHolder.vidCheckBox.setChecked(false);
             myViewHolder.vidInfo.setText(videosList.get(i).getTitle());
             myViewHolder.vidThumb.setOnClickListener(new View.OnClickListener() {
