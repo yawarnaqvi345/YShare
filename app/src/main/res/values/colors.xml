@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4766ff</color>
-    <color name="colorPrimaryDark">#053CDD</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#6c6c6c</color>
+    <color name="colorPrimaryDark">#dfdfe0</color>
+    <color name="colorAccent">#6c6c6c</color>
+
+
+    <color name="bg_main">#806c6c6c</color>
+
     <color name="colorGrey">#ECECEC</color>
     <color name="buttonbackgrnd">#00B8D4</color>
     <color name="red">#D10101</color>
     <color name="ambient">#FFFFFF</color>
     <color name="green">#00C853</color>
+    <color name="button_text_color">#ffffff</color>
+    <color name="button_text_color_dark">#000000</color>
+
 
     <!-- dots inactive colors -->
     <color name="dot_dark_screen1">#d1395c</color>

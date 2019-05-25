@@ -12,7 +12,8 @@
         android:layout_centerVertical="true"
         android:layout_alignBaseline="@+id/lr_ivFileIcon"
         android:layout_alignParentLeft="true"
-        android:focusable="false" />
+        android:focusable="false"
+        android:layout_alignParentStart="true" />
 
     <ImageView
         android:id="@+id/lr_ivFileIcon"
@@ -23,12 +24,14 @@
         android:layout_toRightOf="@+id/lr_cbCheck"
         android:src="@drawable/ic_launcher_foreground"
         android:clickable="false"
-        android:focusable="false" />
+        android:focusable="false"
+        android:layout_toEndOf="@+id/lr_cbCheck" />
 <RelativeLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerVertical="true"
-    android:layout_toRightOf="@+id/lr_ivFileIcon">
+    android:layout_toRightOf="@+id/lr_ivFileIcon"
+    android:layout_toEndOf="@+id/lr_ivFileIcon">
     <TextView
         android:id="@+id/lr_tvFileName"
         android:layout_width="wrap_content"
@@ -38,7 +41,8 @@
 
         android:text="TextView"
         android:clickable="false"
-        android:focusable="false" />
+        android:focusable="false"
+        android:layout_marginStart="10dp" />
 
     <TextView
         android:id="@+id/lr_tvdate"
@@ -49,7 +53,8 @@
 
         android:text="TextView"
         android:focusable="false"
-        android:clickable="false" />
+        android:clickable="false"
+        android:layout_marginStart="10dp" />
 </RelativeLayout>
 
 </RelativeLayout>

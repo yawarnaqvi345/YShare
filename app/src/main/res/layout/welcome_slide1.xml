@@ -20,7 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_10sdp"
         android:text="@string/step_1"
-        android:textColor="@android:color/white"
+        android:textColor="@color/button_text_color"
         android:textSize="@dimen/_18sdp" />
 
     <TextView
@@ -30,6 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:text="@string/select_next_button"
-        android:textColor="@android:color/white"
+        android:textColor="@color/button_text_color"
         android:textSize="@dimen/_14sdp" />
+
 </RelativeLayout>

@@ -1,11 +1,11 @@
 <resources>
 
     <!--TODO: test ads ids-->
-    <string name="interstial">ca-app-pub-3940256099942544/1033173712</string>
+   <!-- <string name="interstial">ca-app-pub-3940256099942544/1033173712</string>
     <string name="Banner">ca-app-pub-3940256099942544/6300978111</string>
-    <!--TODO: original ads ids-->
-    <!-- <string name="Banner">ca-app-pub-7294466580019091/1872864692</string>
-     <string name="interstial">ca-app-pub-7294466580019091/7152933926</string>-->
+   --> <!--TODO: original ads ids-->
+     <string name="Banner">ca-app-pub-7294466580019091/1872864692</string>
+     <string name="interstial">ca-app-pub-7294466580019091/7152933926</string>
 
 
     <string name="app_name">YShare</string>
@@ -41,5 +41,7 @@
     <string name="details_4">Your selected file will be send to another device.</string>
     <string name="step_5">Step 5</string>
     <string name="details_5">You will receive file from sender.</string>
+    <string name="receive">Receive</string>
+    <string name="send">Send</string>
 
 </resources>

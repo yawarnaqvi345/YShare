@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:layout_marginTop="@dimen/_7sdp"
-    android:layout_marginBottom="@dimen/_7sdp"
+    android:background="@color/colorGrey"
     ads:adSize="SMART_BANNER"
     ads:adUnitId="@string/Banner" />
