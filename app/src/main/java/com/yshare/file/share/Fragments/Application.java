@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -35,7 +36,7 @@ public class Application extends Fragment {
     RecyclerView mRecyclerView;
 RelativeLayout anim;
 ProgressBar progressBar;
-AsyncTask asy;
+AsyncTaskRunner asyn;
 
     public Application() {
     }
@@ -48,7 +49,11 @@ AsyncTask asy;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         anim=rootView.findViewById(R.id.loadingPanel);
         progressBar=rootView.findViewById(R.id.progressBar);
-        asy = new AsyncTaskRunner().execute();
+        asyn = new AsyncTaskRunner();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            asyn.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            asyn.execute();
         return rootView;
     }
 
@@ -151,6 +156,7 @@ AsyncTask asy;
 
     private class AsyncTaskRunner extends AsyncTask<Void, Void, Void> {
         ArrayList<AppIication> appList;
+      
 
         @Override
         protected Void doInBackground(Void... params) {

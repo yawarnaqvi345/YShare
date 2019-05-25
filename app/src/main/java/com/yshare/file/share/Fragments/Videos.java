@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.yshare.file.share.FileSelectActivity;
 import com.yshare.file.share.R;
+import com.yshare.file.share.ReceiveActivity;
 import com.yshare.file.share.strucmodels.FileToSendPath;
 import com.yshare.file.share.strucmodels.Video;
 
@@ -39,6 +41,7 @@ public class Videos extends Fragment {
     List<Video> mVideoList=new ArrayList<Video>();
     RecyclerView mRecyclerView;
     RelativeLayout progress;
+    AsyncTaskRunner asyn;
     public Videos() {
     }
     @Override
@@ -48,7 +51,9 @@ public class Videos extends Fragment {
         progress=rootView.findViewById(R.id.video_loadingPanel);
         mRecyclerView = rootView.findViewById(R.id.videos_recycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        new AsyncTaskRunner().execute();
+        asyn = new AsyncTaskRunner();
+        asyn.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         return rootView;
     }
     private class VideoRecyclerAdapter extends  RecyclerView.Adapter<MyViewHolder>{

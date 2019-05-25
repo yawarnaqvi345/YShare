@@ -69,7 +69,7 @@ public class ReceiveActivity extends BaseActivity {
     LinearLayout elseLinear;
     boolean requestFound=false;
     private SimpleArrayMap<String, String> deviceName = new SimpleArrayMap<>();
-
+    AsyncTaskRunner asyn;
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -88,7 +88,12 @@ public class ReceiveActivity extends BaseActivity {
         //  FileToSendPath d=new FileToSendPath();
         // d.setName(" ");
         // mPathsList.add(d);
-        new AsyncTaskRunner().execute();
+        asyn = new AsyncTaskRunner();
+        asyn.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       // asyn.execute();
+
+
+
         textView=findViewById(R.id.receive_activity_text);
         animationView=findViewById(R.id.receive_animation_view);
         elseLinear=findViewById(R.id.receive_linear_else);

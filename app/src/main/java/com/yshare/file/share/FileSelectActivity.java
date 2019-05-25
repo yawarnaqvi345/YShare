@@ -170,20 +170,8 @@ public class FileSelectActivity extends BaseActivity {
             }
         });
 
-//        //TODO: Ads intialization
-//        // adView();
-//        mInterstitialAd = new InterstitialAd(getApplicationContext());
-//        mInterstitialAd.setAdUnitId(getString(R.string.interstial));
-//        try {
-//            if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
-//                AdRequest adRequest = new AdRequest.Builder().build();
-//                mInterstitialAd.loadAd(adRequest);
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        requestNewInterstitial();
-        //setupTabIcons();
+
+
     }
 
     //TODO: Requesting Ads method

@@ -23,8 +23,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.yshare.file.share.R;
 import com.yshare.file.share.strucmodels.TextMessage;
 import com.google.android.gms.nearby.Nearby;
@@ -41,8 +44,10 @@ import com.google.android.gms.nearby.connection.PayloadCallback;
 import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -74,6 +79,9 @@ public class Call extends Fragment {
     int sampleRate = 16000; // 44100 for music
     int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_MONO;
     int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
+    private AudioManager m_amAudioManager;
+
+
     AudioTrack track;
     String id1;
     int minBufSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat);
@@ -108,13 +116,15 @@ public class Call extends Fragment {
         @Override
         public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
             if (index == 0) {
-                track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
+                track = new AudioTrack(AudioManager.STREAM_VOICE_CALL, sampleRate,
                         AudioFormat.CHANNEL_OUT_MONO,
                         AudioFormat.ENCODING_PCM_16BIT, minBufSize * 10,
                         AudioTrack.MODE_STREAM);
                 index++;
+
                 //track.write(payload.asBytes(), 0, payload.asBytes().length);
                 track.play();
+
 
             }
             track.write(payload.asBytes(), 0, payload.asBytes().length);
@@ -183,7 +193,7 @@ public class Call extends Fragment {
         }
 
         @Override
-        public void onDisconnected(@NonNull String s) {
+        public void onDisconnected(@NonNull final String s) {
             if (!isDiscoverer) {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
                 alertDialogBuilder.setMessage("connection to " + s + "lost, Do you want to reconnect?");
@@ -191,6 +201,7 @@ public class Call extends Fragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
+
                                 Nearby.getConnectionsClient(getContext()).requestConnection(connectedDevId, connectedDevName, mConnectionLifecycleCallback);
                             }
                         });
@@ -238,6 +249,9 @@ public class Call extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         textList = new ArrayList<>();
+        m_amAudioManager = (AudioManager) this.getActivity().getSystemService(getContext().AUDIO_SERVICE);
+        m_amAudioManager.setMode(AudioManager.MODE_IN_CALL);
+        m_amAudioManager.setSpeakerphoneOn(false);
         Nearby.getConnectionsClient(getContext())
                 .startAdvertising(
                         /* endpointName= */ android.os.Build.MODEL,
@@ -319,21 +333,22 @@ public class Call extends Fragment {
 
                     recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
                     Log.d("VS", "Recorder initialized");
-                  /*  track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
+                    /*track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
                             AudioFormat.CHANNEL_OUT_MONO,
                             AudioFormat.ENCODING_PCM_16BIT, minBufSize*10,
-                            AudioTrack.MODE_STREAM);
-*/
+                            AudioTrack.MODE_STREAM);*/
                     recorder.startRecording();
                     //track.play();
 
-                    FileOutputStream os = new FileOutputStream(Environment.getExternalStorageDirectory() + "/share/os.");
+                    FileOutputStream os = new FileOutputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
+                    InputStream is= new FileInputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
 
 
                     while (status) {
                         //reading data from MIC into buffer
                         minBufSize = recorder.read(buffer, 0, buffer.length);
-                        os.write(buffer, 0, buffer.length);
+                        //os.write(buffer, 0, buffer.length);
+                       // is.read(buffer, 0, buffer.length);
                         // track.write(buffer, 0, buffer.length);
                         //putting buffer in the packet
                         // packet = new DatagramPacket (buffer,buffer.length,destination,port);
@@ -372,7 +387,21 @@ public class Call extends Fragment {
             myDevViewHolder.conButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Nearby.getConnectionsClient(getContext()).requestConnection(discoveredDevices.get(i), devNametoPos.get(discoveredDevices.get(i)), mConnectionLifecycleCallback);
+                    Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(devNametoPos.get(discoveredDevices.get(i)));
+                    Nearby.getConnectionsClient(getContext()).requestConnection(discoveredDevices.get(i), devNametoPos.get(discoveredDevices.get(i)), mConnectionLifecycleCallback)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getContext(),"Request success",Toast.LENGTH_SHORT);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(discoveredDevices.get(i));
+                            Toast.makeText(getContext(),"Request Failed",Toast.LENGTH_SHORT);
+
+                        }
+                    });
                 }
             });
         }

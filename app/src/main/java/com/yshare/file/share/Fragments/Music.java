@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -41,6 +42,7 @@ public class Music extends Fragment {
     RecyclerView recyclerView;
     RelativeLayout progress;
     MediaPlayer mediaPlayer = new MediaPlayer();
+    AsyncTaskRunner asyn;
 
     public Music() {
         // Required empty public constructor
@@ -57,7 +59,11 @@ public class Music extends Fragment {
 
 
 
-       new AsyncTaskRunner().execute();
+        asyn = new AsyncTaskRunner();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            asyn.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else
+            asyn.execute();
         return rootView;
     }
 
