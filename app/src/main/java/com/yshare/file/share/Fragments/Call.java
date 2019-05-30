@@ -140,9 +140,9 @@ public class Call extends Fragment {
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 }
-                buttonCall.setVisibility(View.VISIBLE);
-                devInfo.setVisibility(View.VISIBLE);
-                discoverButton.setVisibility(View.GONE);
+               // buttonCall.setVisibility(View.VISIBLE);
+               // devInfo.setVisibility(View.VISIBLE);
+                discoverButton.setVisibility(View.VISIBLE);
                 searchLayout.setVisibility(View.GONE);
                 searchAnim.setVisibility(View.GONE);
                 connectButton.setVisibility(View.GONE);
@@ -305,8 +305,8 @@ public class Call extends Fragment {
                     Nearby.getConnectionsClient(getContext()).sendPayload(id, p);
                     buttonCall.setVisibility(View.VISIBLE);
                     // buttonReceiveCall.setVisibility(View.VISIBLE);
-                    devInfo.setVisibility(View.VISIBLE);
-                    discoverButton.setVisibility(View.GONE);
+                  //  devInfo.setVisibility(View.VISIBLE);
+                    discoverButton.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     searchAnim.setVisibility(View.GONE);
                     connectButton.setVisibility(View.GONE);
@@ -465,18 +465,23 @@ public class Call extends Fragment {
                     }
                     callerInfo.setText("Connecting to "+devNametoPos.get(discoveredDevices.get(i)));
                     callScreen.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.GONE);
+                    devInfo.setVisibility(View.GONE);
                     //  Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
                     Nearby.getConnectionsClient(getContext()).requestConnection(discoveredDevices.get(i), devNametoPos.get(discoveredDevices.get(i)), mConnectionLifecycleCallback)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(getContext(), "Request success", Toast.LENGTH_SHORT);
+                                    callerInfo.setText("Waiting for connection acceptance");
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(discoveredDevices.get(i));
-                            Toast.makeText(getContext(), "Request Failed with exception " + e.getMessage(), Toast.LENGTH_SHORT);
+                            callScreen.setVisibility(View.GONE);
+                            searchLayout.setVisibility(View.VISIBLE);
+                            Toast.makeText(getActivity().getApplicationContext(), "Request Failed with exception " + e.getMessage(), Toast.LENGTH_SHORT);
 
                         }
                     });

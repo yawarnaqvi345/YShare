@@ -25,6 +25,6 @@
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground"
             android:background="@drawable/round_button"
-            android:text="Connect" />
+            android:text="Call" />
     </LinearLayout>
 </LinearLayout>

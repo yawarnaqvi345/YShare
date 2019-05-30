@@ -69,6 +69,7 @@ public final class Permissions {
         requiredPermissions.add(PERMISSION_WRITE_EXTERNAL_STORAGE);
         requiredPermissions.add(PERMISSION_READ_EXTERNAL_STORAGE);
         requiredPermissions.add(PERMISSION_ACCESS_COARSE_LOCATION);
+        requiredPermissions.add(PERMISSION_RECORD_AUDIO);
 
 
         //Add all the required permission in the list
