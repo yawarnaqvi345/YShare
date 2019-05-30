@@ -9,8 +9,12 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.circularreveal.cardview.CircularRevealCardView;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.SimpleArrayMap;
 import android.support.v7.app.AlertDialog;
@@ -21,7 +25,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +51,7 @@ import com.google.android.gms.nearby.connection.PayloadTransferUpdate;
 import com.google.android.gms.nearby.connection.Strategy;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +59,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,7 +88,13 @@ public class Call extends Fragment {
     int channelConfig = AudioFormat.CHANNEL_CONFIGURATION_MONO;
     int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
     private AudioManager m_amAudioManager;
+    RelativeLayout callScreen;
+    TextView callerInfo;
+    CircularRevealCardView acceptCallButton, rejectCallButton;
+    boolean isCaller = false;
+    boolean answered=false;
 
+    Chronometer chronometer;
 
     AudioTrack track;
     String id1;
@@ -115,20 +129,52 @@ public class Call extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
-            if (index == 0) {
+            String payloadFilenameMessage = new String(payload.asBytes(), StandardCharsets.UTF_8);
+            if(payloadFilenameMessage.equalsIgnoreCase("end")){
+                try {
+                    recorder.stop();
+                    track.stop();
+                    chronometer.stop();
+                    recorder.release();
+                    track.release();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+                buttonCall.setVisibility(View.VISIBLE);
+                devInfo.setVisibility(View.VISIBLE);
+                discoverButton.setVisibility(View.GONE);
+                searchLayout.setVisibility(View.GONE);
+                searchAnim.setVisibility(View.GONE);
+                connectButton.setVisibility(View.GONE);
+                callScreen.setVisibility(View.GONE);
+            }
+            if (isCaller && index == 0) {
                 track = new AudioTrack(AudioManager.STREAM_VOICE_CALL, sampleRate,
                         AudioFormat.CHANNEL_OUT_MONO,
                         AudioFormat.ENCODING_PCM_16BIT, minBufSize * 10,
                         AudioTrack.MODE_STREAM);
-                index++;
-
-                //track.write(payload.asBytes(), 0, payload.asBytes().length);
+                // index++;
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                chronometer.start();
                 track.play();
-
-
             }
-            track.write(payload.asBytes(), 0, payload.asBytes().length);
-
+            if (index == 0) {
+                buttonCall.setVisibility(View.INVISIBLE);
+                buttonReceiveCall.setVisibility(View.INVISIBLE);
+                devInfo.setVisibility(View.INVISIBLE);
+                callScreen.setVisibility(View.VISIBLE);
+                index++;
+                Vibrator vi = (Vibrator) getActivity().getSystemService(getContext().VIBRATOR_SERVICE);
+                    // Vibrate for 500 milliseconds
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vi.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vi.vibrate(1000);
+                }
+            } else {
+                if(answered || isCaller){
+                    track.write(payload.asBytes(), 0, payload.asBytes().length);}
+            }
         }
 
         @Override
@@ -174,14 +220,17 @@ public class Call extends Fragment {
                 case ConnectionsStatusCodes.STATUS_OK:
                     devName.setText("Connected to " + s);
                     id = s;
-                    buttonCall.setVisibility(View.VISIBLE);
-                    buttonReceiveCall.setVisibility(View.VISIBLE);
+                    //buttonCall.setVisibility(View.VISIBLE);
+                    buttonCall.callOnClick();
+                   // buttonReceiveCall.setVisibility(View.VISIBLE);
+                    //devInfo.setVisibility(View.VISIBLE);
                     discoverButton.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.GONE);
-                    devInfo.setVisibility(View.VISIBLE);
                     searchAnim.setVisibility(View.GONE);
                     Nearby.getConnectionsClient(getContext()).stopDiscovery();
                     connectButton.setVisibility(View.GONE);
+                    callerInfo.setText("Calling s");
+                    callScreen.setVisibility(View.VISIBLE);
                     break;
                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                     break;
@@ -219,30 +268,55 @@ public class Call extends Fragment {
             } else {
                 devName.setText("Connection Lost");
             }
-
-
         }
     };
     View.OnClickListener onClickListener = new View.OnClickListener() {
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.mbutton_call:
+                    callerInfo.setText("call from "+id);
                     startStreaming();
+                    isCaller = true;
                     break;
                 case R.id.mbutton_rec:
+                    break;
+                case R.id.accept_call_button:
+                    track = new AudioTrack(AudioManager.STREAM_VOICE_CALL, sampleRate,
+                            AudioFormat.CHANNEL_OUT_MONO,
+                            AudioFormat.ENCODING_PCM_16BIT, minBufSize * 10,
+                            AudioTrack.MODE_STREAM);
+                    index++;
+                    track.play();
+                    answered=true;
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    chronometer.start();
+                    startStreaming();
+                    break;
+                case R.id.reject_call_button:
+                    if (track != null) {
+                        chronometer.stop();
+                        recorder.stop();
+                        track.stop();
+                    }
+                    String s="end";
+                    Payload p=Payload.fromBytes(s.getBytes(StandardCharsets.UTF_8));
+                    Nearby.getConnectionsClient(getContext()).sendPayload(id, p);
+                    buttonCall.setVisibility(View.VISIBLE);
+                    // buttonReceiveCall.setVisibility(View.VISIBLE);
+                    devInfo.setVisibility(View.VISIBLE);
+                    discoverButton.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.GONE);
+                    searchAnim.setVisibility(View.GONE);
+                    connectButton.setVisibility(View.GONE);
+                    callScreen.setVisibility(View.GONE);
                     break;
                 default:
                     break;
             }
-
         }
     };
-    private int port = 8080;
-
-    public Call() {
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
@@ -265,9 +339,15 @@ public class Call extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_call, container, false);
         // Inflate the layout for this fragment
-
+        callerInfo = rootView.findViewById(R.id.caller_info);
+        acceptCallButton = rootView.findViewById(R.id.accept_call_button);
+        acceptCallButton.setOnClickListener(onClickListener);
+        rejectCallButton = rootView.findViewById(R.id.reject_call_button);
+        rejectCallButton.setOnClickListener(onClickListener);
+        callScreen = rootView.findViewById(R.id.incoming_call);
         devInfo = rootView.findViewById(R.id.dev_info_call);
         devName = rootView.findViewById(R.id.dev_name_call);
+        chronometer = rootView.findViewById(R.id.chronometer);
         connectButton = rootView.findViewById(R.id.connect_button_call_call);
         searchLayout = rootView.findViewById(R.id.search_layout_call);
         devFoundRecycler = rootView.findViewById(R.id.dev_found_recycler_call);
@@ -283,16 +363,13 @@ public class Call extends Fragment {
                 discoverButton.setVisibility(View.GONE);
                 searchAnim.setVisibility(View.VISIBLE);
                 isDiscoverer = true;
-
             }
         });
         buttonCall = rootView.findViewById(R.id.mbutton_call);
         buttonCall.setOnClickListener(onClickListener);
         buttonReceiveCall = rootView.findViewById(R.id.mbutton_rec);
         buttonReceiveCall.setOnClickListener(onClickListener);
-
         return rootView;
-
     }
 
     @Override
@@ -310,52 +387,44 @@ public class Call extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
+        Nearby.getConnectionsClient(getContext()).stopDiscovery();
+        Nearby.getConnectionsClient(getContext()).stopAdvertising();
     }
 
     public void startStreaming() {
         Thread streamThread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 try {
-
-                    DatagramSocket socket = new DatagramSocket();
-                    Log.d("VS", "Socket Created");
-
+                 //   DatagramSocket socket = new DatagramSocket();
+                  //  Log.d("VS", "Socket Created");
                     byte[] buffer = new byte[minBufSize];
-
                     Log.d("VS", "Buffer created of size " + minBufSize);
-                    DatagramPacket packet;
-
+                  //  DatagramPacket packet;
                     final InetAddress destination = InetAddress.getByName("192.168.10.21");
-                    Log.d("VS", "Address retrieved");
-
-
+                //    Log.d("VS", "Address retrieved");
                     recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
                     Log.d("VS", "Recorder initialized");
-                    /*track = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRate,
-                            AudioFormat.CHANNEL_OUT_MONO,
-                            AudioFormat.ENCODING_PCM_16BIT, minBufSize*10,
-                            AudioTrack.MODE_STREAM);*/
                     recorder.startRecording();
-                    //track.play();
-
-                    FileOutputStream os = new FileOutputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
-                    InputStream is= new FileInputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
-
-
+                //    FileOutputStream os = new FileOutputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
+                 //   InputStream is = new FileInputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
                     while (status) {
                         //reading data from MIC into buffer
-                        minBufSize = recorder.read(buffer, 0, buffer.length);
-                        //os.write(buffer, 0, buffer.length);
-                       // is.read(buffer, 0, buffer.length);
-                        // track.write(buffer, 0, buffer.length);
-                        //putting buffer in the packet
-                        // packet = new DatagramPacket (buffer,buffer.length,destination,port);
-                        Payload bytesPayload = Payload.fromBytes(buffer);
-                        Nearby.getConnectionsClient(getContext()).sendPayload(id, bytesPayload);
-                        // socket.send(packet);
-                        //System.out.println("MinBufferSize: " +minBufSize);
+                        try {
+                            minBufSize = recorder.read(buffer, 0, buffer.length);
+                            Payload bytesPayload = Payload.fromBytes(buffer);
+                            Nearby.getConnectionsClient(getContext()).sendPayload(id, bytesPayload);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            try {
+                                recorder.stop();
+                                recorder.release();
+                            } catch (IllegalStateException e1) {
+                                e1.printStackTrace();
+                            }
+                            break;
+                        }
                     }
 
                 } catch (UnknownHostException e) {
@@ -365,6 +434,7 @@ public class Call extends Fragment {
                     Log.e("VS", "IOException");
                 }
             }
+
 
         });
         streamThread.start();
@@ -384,21 +454,29 @@ public class Call extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyDevViewHolder myDevViewHolder, final int i) {
             myDevViewHolder.devName.setText(discoveredDevices.get(i));
+
             myDevViewHolder.conButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(devNametoPos.get(discoveredDevices.get(i)));
+                    try {
+                        Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(devNametoPos.get(discoveredDevices.get(i)));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    callerInfo.setText("Connecting to "+devNametoPos.get(discoveredDevices.get(i)));
+                    callScreen.setVisibility(View.VISIBLE);
+                    //  Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
                     Nearby.getConnectionsClient(getContext()).requestConnection(discoveredDevices.get(i), devNametoPos.get(discoveredDevices.get(i)), mConnectionLifecycleCallback)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Toast.makeText(getContext(),"Request success",Toast.LENGTH_SHORT);
+                                    Toast.makeText(getContext(), "Request success", Toast.LENGTH_SHORT);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(discoveredDevices.get(i));
-                            Toast.makeText(getContext(),"Request Failed",Toast.LENGTH_SHORT);
+                            Toast.makeText(getContext(), "Request Failed with exception " + e.getMessage(), Toast.LENGTH_SHORT);
 
                         }
                     });

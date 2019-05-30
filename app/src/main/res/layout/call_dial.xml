@@ -36,26 +36,30 @@
         android:layout_marginBottom="100dp">
 
         <android.support.design.circularreveal.cardview.CircularRevealCardView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="50dp"
             android:background="@null"
+            android:foreground="?android:attr/selectableItemBackground"
             app:cardCornerRadius="50dp">
 
             <ImageView
+                android:layout_margin="@dimen/_10sdp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_call_end_red_24dp" />
         </android.support.design.circularreveal.cardview.CircularRevealCardView>
 
         <android.support.design.circularreveal.cardview.CircularRevealCardView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="50dp"
+            android:foreground="?android:attr/selectableItemBackground"
             app:cardCornerRadius="50dp">
 
             <ImageView
+                android:layout_margin="@dimen/_10sdp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_call_green_24dp" />

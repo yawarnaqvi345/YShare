@@ -40,12 +40,12 @@
         android:layout_centerInParent="true"
         android:layout_margin="3dp"
         android:layout_weight="1"
-        android:textColor="@color/colorGrey"
         android:background="@drawable/round_button"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:padding="20dp"
-        android:text="Discover" />
+        android:text="Discover"
+        android:textColor="@color/colorGrey" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/search_animation_call"
@@ -109,15 +109,85 @@
             android:visibility="gone" />
     </LinearLayout>
 
-   <!-- <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:padding="@dimen/_15sdp"
-        android:text="Calling feature coming to Y-Share soon."
-        android:textColor="@color/button_text_color"
-        android:textAlignment="center"
-        android:textSize="@dimen/_25sdp" />-->
+    <RelativeLayout
+        android:id="@+id/incoming_call"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
 
+        <RelativeLayout
+            android:id="@+id/call_info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_100sdp">
+
+            <ImageView
+                android:id="@+id/person"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_person_cust_24dp" />
+
+            <TextView
+                android:layout_centerHorizontal="true"
+
+                android:id="@+id/caller_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/person"
+                android:text="alif calling"
+                android:textSize="20dp" />
+
+            <Chronometer
+                android:layout_centerHorizontal="true"
+
+                android:id="@+id/chronometer"
+                android:layout_below="@id/caller_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/call_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_50sdp">
+
+            <android.support.design.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/reject_call_button"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="50dp"
+                android:background="@null"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="40dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:src="@drawable/ic_call_end_red_24dp" />
+            </android.support.design.circularreveal.cardview.CircularRevealCardView>
+
+            <android.support.design.circularreveal.cardview.CircularRevealCardView
+                android:id="@+id/accept_call_button"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="40dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:src="@drawable/ic_call_green_24dp" />
+            </android.support.design.circularreveal.cardview.CircularRevealCardView>
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
