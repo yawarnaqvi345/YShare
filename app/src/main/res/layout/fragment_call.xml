@@ -142,8 +142,8 @@
 
             <Chronometer
                 android:layout_centerHorizontal="true"
-
                 android:id="@+id/chronometer"
+                android:visibility="gone"
                 android:layout_below="@id/caller_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -154,14 +154,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_50sdp">
-
+            android:layout_marginBottom="@dimen/_50sdp"
+            android:gravity="center">
             <android.support.design.circularreveal.cardview.CircularRevealCardView
                 android:id="@+id/reject_call_button"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginLeft="50dp"
                 android:background="@null"
+
                 android:foreground="?android:attr/selectableItemBackground"
                 app:cardCornerRadius="40dp">
 
@@ -178,6 +179,7 @@
                 android:layout_height="80dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="50dp"
+
                 android:foreground="?android:attr/selectableItemBackground"
                 app:cardCornerRadius="40dp">
 

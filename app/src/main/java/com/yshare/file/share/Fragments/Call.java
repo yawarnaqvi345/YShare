@@ -135,12 +135,24 @@ public class Call extends Fragment {
                     recorder.stop();
                     track.stop();
                     chronometer.stop();
+                    chronometer.setVisibility(View.GONE);
                     recorder.release();
                     track.release();
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 }
-               // buttonCall.setVisibility(View.VISIBLE);
+                try {
+                    Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(devNametoPos.get(discoveredDevices.get(0)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(id);
+               // Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
+                RelativeLayout.LayoutParams rlp1=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
+                rlp1.setMargins(50,0,0,0);
+                rejectCallButton.setLayoutParams(rlp1);
+                acceptCallButton.setVisibility(View.VISIBLE);
+                buttonCall.setVisibility(View.INVISIBLE);
                // devInfo.setVisibility(View.VISIBLE);
                 discoverButton.setVisibility(View.VISIBLE);
                 searchLayout.setVisibility(View.GONE);
@@ -163,6 +175,10 @@ public class Call extends Fragment {
                 buttonReceiveCall.setVisibility(View.INVISIBLE);
                 devInfo.setVisibility(View.INVISIBLE);
                 callScreen.setVisibility(View.VISIBLE);
+                RelativeLayout.LayoutParams rlp1=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
+                rlp1.setMargins(0,0,0,0);
+                rejectCallButton.setLayoutParams(rlp1);
+                acceptCallButton.setVisibility(View.GONE);
                 index++;
                 Vibrator vi = (Vibrator) getActivity().getSystemService(getContext().VIBRATOR_SERVICE);
                     // Vibrate for 500 milliseconds
@@ -229,7 +245,8 @@ public class Call extends Fragment {
                     searchAnim.setVisibility(View.GONE);
                     Nearby.getConnectionsClient(getContext()).stopDiscovery();
                     connectButton.setVisibility(View.GONE);
-                    callerInfo.setText("Calling s");
+                    chronometer.setVisibility(View.VISIBLE);
+                    callerInfo.setText("Call to "+s);
                     callScreen.setVisibility(View.VISIBLE);
                     break;
                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
@@ -290,6 +307,10 @@ public class Call extends Fragment {
                     index++;
                     track.play();
                     answered=true;
+                    RelativeLayout.LayoutParams rlp=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
+                    rlp.setMargins(0,0,0,0);
+                    rejectCallButton.setLayoutParams(rlp);
+                    acceptCallButton.setVisibility(View.GONE);
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     chronometer.start();
                     startStreaming();
@@ -300,10 +321,15 @@ public class Call extends Fragment {
                         recorder.stop();
                         track.stop();
                     }
+                  //  Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
+                    RelativeLayout.LayoutParams rlp1=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
+                    rlp1.setMargins(50,0,0,0);
+                    rejectCallButton.setLayoutParams(rlp1);
+                    acceptCallButton.setVisibility(View.VISIBLE);
                     String s="end";
                     Payload p=Payload.fromBytes(s.getBytes(StandardCharsets.UTF_8));
                     Nearby.getConnectionsClient(getContext()).sendPayload(id, p);
-                    buttonCall.setVisibility(View.VISIBLE);
+                    buttonCall.setVisibility(View.INVISIBLE);
                     // buttonReceiveCall.setVisibility(View.VISIBLE);
                   //  devInfo.setVisibility(View.VISIBLE);
                     discoverButton.setVisibility(View.VISIBLE);

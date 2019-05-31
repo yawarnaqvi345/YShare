@@ -1,8 +1,14 @@
 package com.yshare.file.share;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.ColorSpace;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +32,7 @@ public class MainActivity extends BaseActivity {
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment selectedFrag = null;
@@ -33,12 +40,16 @@ public class MainActivity extends BaseActivity {
                 
                 case R.id.navigation_transfer:
                     selectedFrag = new Transfer();
+                    item.getIcon().setTint(Color.rgb(150,15,20));
                     break;
                 case R.id.navigation_messaging:
                     selectedFrag = new Messaging();
+                   /* item.getIcon().setColorFilter(new
+                            PorterDuffColorFilter(0xfff000, PorterDuff.Mode.MULTIPLY));*/
                     break;
                 case R.id.navigation_call:
                     selectedFrag = new Call();
+                    item.getIcon().setTint(Color.rgb(150,15,20));
                     break;
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_section, selectedFrag).commit();
