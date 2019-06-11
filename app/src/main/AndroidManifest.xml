@@ -37,10 +37,12 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".FinalSendActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+           />
         <activity
             android:name=".FileSelectActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
 
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"

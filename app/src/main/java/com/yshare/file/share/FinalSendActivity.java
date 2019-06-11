@@ -43,7 +43,7 @@ import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class FinalSendActivity extends AppCompatActivity {
+public class FinalSendActivity extends BaseActivity {
     ConstraintLayout view;
     Activity mActivity=this;
     TextView finalshareTextView;
@@ -103,7 +103,7 @@ public class FinalSendActivity extends AppCompatActivity {
                         recyclerIdPosition.put(filePayload.getId(),index);
                         index++;
                     }
-                    Nearby.getConnectionsClient(FinalSendActivity.this).disconnectFromEndpoint(s);
+                    //Nearby.getConnectionsClient(FinalSendActivity.this).disconnectFromEndpoint(s);
                    // Toast.makeText(getApplicationContext(), "Connection Accepted", Toast.LENGTH_SHORT).show();
                     break;
                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
@@ -150,14 +150,24 @@ public class FinalSendActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
+        try {
+            Nearby.getConnectionsClient(FinalSendActivity.this).disconnectFromEndpoint(connectedDeviceId);
+            Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
+        try {
+            Nearby.getConnectionsClient(FinalSendActivity.this).disconnectFromEndpoint(connectedDeviceId);
+            Nearby.getConnectionsClient(FinalSendActivity.this).stopDiscovery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.finish();
         //mPathsList.clear();
     }
@@ -174,6 +184,7 @@ public class FinalSendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_final_send);
         setTitle("Send");
+        themeColorHeader(R.color.colorPrimary);
         waitingLayout=findViewById(R.id.waiting);
         waitingText=findViewById(R.id.waiting_text);
         mainDiscoveryLayout = findViewById(R.id.layout_main);

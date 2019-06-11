@@ -36,6 +36,8 @@ public class FileSelectActivity extends BaseActivity {
     public static ImageView crossButton;
     public static ImageView sendButton;
     TabLayout tabLayout;
+    ViewPagerAdapter adapter;
+   ViewPager viewPager;
     // AdView adView;
     InterstitialAd mInterstitialAd;
 
@@ -56,7 +58,7 @@ public class FileSelectActivity extends BaseActivity {
     public static void UpdateView() {
         numOfFilesSelected.setText(String.valueOf(mPathsList.size()));
         if (mPathsList.size() < 1) {
-            selectedDisplayLayout.setVisibility(View.INVISIBLE);
+            selectedDisplayLayout.setVisibility(View.GONE);
         } else {
             selectedDisplayLayout.setVisibility(View.VISIBLE);
         }
@@ -73,14 +75,24 @@ public class FileSelectActivity extends BaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        mPathsList.clear();
-        UpdateView();
+        try {
+            mPathsList.clear();
+            clearList();
+            UpdateView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPathsList.clear();
+        try {
+            mPathsList.clear();
+            clearList();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -88,7 +100,7 @@ public class FileSelectActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "OnCreate");
         setContentView(R.layout.activity_file_select);
-        themeColorHeader(R.color.colorPrimary);
+       themeColorHeader(R.color.colorPrimary);
 
         //TODO: Ads intialization
         mInterstitialAd = new InterstitialAd(getApplicationContext());
@@ -105,8 +117,8 @@ public class FileSelectActivity extends BaseActivity {
         requestNewInterstitial();
 
         setTitle("Files");
-        final ViewPager viewPager = findViewById(R.id.send_activity_view_pager);
-        final ViewPagerAdapter adapter = new ViewPagerAdapter(this, getSupportFragmentManager());
+        viewPager = findViewById(R.id.send_activity_view_pager);
+       adapter = new ViewPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout = findViewById(R.id.send_activity_tab_layout);
 
@@ -199,4 +211,13 @@ public class FileSelectActivity extends BaseActivity {
 
         });
     }*/
+  void clearList(){
+      mPathsList.clear();
+      UpdateView();
+      Fragment frag = adapter.getItem(viewPager.getCurrentItem());
+      final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      ft.detach(frag);
+      ft.attach(frag);
+      ft.commit();
+  }
 }

@@ -72,6 +72,7 @@ public class ReceiveActivity extends BaseActivity {
     AsyncTaskRunner asyn;
     @Override
     public void onBackPressed() {
+        asyn.cancel(true);
         super.onBackPressed();
         Nearby.getConnectionsClient(ReceiveActivity.this).stopAdvertising();
         finish();
@@ -114,6 +115,7 @@ public class ReceiveActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         Nearby.getConnectionsClient(ReceiveActivity.this).stopAdvertising();
+        asyn.cancel(true);
         super.onDestroy();
 
     }
