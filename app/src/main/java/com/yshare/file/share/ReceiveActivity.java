@@ -3,11 +3,13 @@ package com.yshare.file.share;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
@@ -73,11 +75,15 @@ public class ReceiveActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         asyn.cancel(true);
+        if(!wasEnabled){
+            wifiManager.setWifiEnabled(false);
+        }
         super.onBackPressed();
         Nearby.getConnectionsClient(ReceiveActivity.this).stopAdvertising();
         finish();
     }
-
+    WifiManager wifiManager;
+    boolean wasEnabled=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +92,14 @@ public class ReceiveActivity extends BaseActivity {
         themeColorHeader(R.color.colorPrimary);
         setTitle("Receive");
         mPathsList = new ArrayList<>();
+
+
+         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if(!wifiManager.isWifiEnabled()){
+        wifiManager.setWifiEnabled(true);
+        wasEnabled=false;
+        }
+       // wifiManager.setWifiEnabled(false);
         //  FileToSendPath d=new FileToSendPath();
         // d.setName(" ");
         // mPathsList.add(d);
@@ -116,6 +130,9 @@ public class ReceiveActivity extends BaseActivity {
     protected void onDestroy() {
         Nearby.getConnectionsClient(ReceiveActivity.this).stopAdvertising();
         asyn.cancel(true);
+        if(!wasEnabled){
+            wifiManager.setWifiEnabled(false);
+        }
         super.onDestroy();
 
     }
