@@ -28,7 +28,11 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:fullBackupContent="@xml/backup_descriptor">
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
         <activity
             android:name=".IntroActivity"
             android:screenOrientation="portrait" />
@@ -44,9 +48,7 @@
             android:screenOrientation="portrait"
             />
 
-        <meta-data
-            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true" />
+
 
         <activity
             android:name=".slidingscreen.WelcomeActivity"

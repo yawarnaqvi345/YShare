@@ -13,11 +13,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdView;
 import com.yshare.file.share.Adapters.ViewPagerAdapter;
+import com.yshare.file.share.Fragments.Transfer;
 import com.yshare.file.share.strucmodels.FileToSendPath;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -38,7 +41,7 @@ public class FileSelectActivity extends BaseActivity {
     TabLayout tabLayout;
     ViewPagerAdapter adapter;
    ViewPager viewPager;
-    // AdView adView;
+     AdView adView;
     InterstitialAd mInterstitialAd;
 
     @Override
@@ -75,13 +78,17 @@ public class FileSelectActivity extends BaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        try {
-            mPathsList.clear();
-            clearList();
-            UpdateView();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(!Transfer.adpress) {
+            try {
+                mPathsList.clear();
+                clearList();
+               // UpdateView();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+        Transfer.adpress= false;
+        UpdateView();
     }
 
     @Override
@@ -101,7 +108,7 @@ public class FileSelectActivity extends BaseActivity {
         Log.d(TAG, "OnCreate");
         setContentView(R.layout.activity_file_select);
        themeColorHeader(R.color.colorPrimary);
-
+        adView();
         //TODO: Ads intialization
         mInterstitialAd = new InterstitialAd(getApplicationContext());
         mInterstitialAd.setAdUnitId(getString(R.string.interstial));
@@ -123,7 +130,13 @@ public class FileSelectActivity extends BaseActivity {
         tabLayout = findViewById(R.id.send_activity_tab_layout);
 
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        for(int i=0; i < tabLayout.getTabCount(); i++) {
+            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+            p.setMargins(15, 15, 15, 15);
+            tab.requestLayout();
+        }
+        tabLayout.addOnTabSelectedListener (new TabLayout.OnTabSelectedListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -156,10 +169,12 @@ public class FileSelectActivity extends BaseActivity {
                 mPathsList.clear();
                 UpdateView();
                 Fragment frag = adapter.getItem(viewPager.getCurrentItem());
+            if  (!frag.isAdded()) {
                 final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.detach(frag);
                 ft.attach(frag);
                 ft.commit();
+            }
             }
         });
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -211,6 +226,25 @@ public class FileSelectActivity extends BaseActivity {
 
         });
     }*/
+
+    private void adView() {
+        adView = findViewById(R.id.banner);
+        final AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+        adView.setAdListener(new AdListener() {
+
+            @Override
+            public void onAdLoaded() {
+                adView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int error) {
+                adView.setVisibility(View.GONE);
+            }
+
+        });
+    }
   void clearList(){
       mPathsList.clear();
       UpdateView();

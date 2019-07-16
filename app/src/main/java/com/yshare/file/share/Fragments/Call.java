@@ -32,6 +32,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.yshare.file.share.R;
@@ -92,8 +95,8 @@ public class Call extends Fragment {
     TextView callerInfo;
     CircularRevealCardView acceptCallButton, rejectCallButton;
     boolean isCaller = false;
-    boolean answered=false;
-
+    boolean answered = false;
+    InterstitialAd mInterstitialAd;
     Chronometer chronometer;
 
     AudioTrack track;
@@ -130,7 +133,7 @@ public class Call extends Fragment {
         @Override
         public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
             String payloadFilenameMessage = new String(payload.asBytes(), StandardCharsets.UTF_8);
-            if(payloadFilenameMessage.equalsIgnoreCase("end")){
+            if (payloadFilenameMessage.equalsIgnoreCase("end")) {
                 try {
                     recorder.stop();
                     track.stop();
@@ -147,13 +150,13 @@ public class Call extends Fragment {
                     e.printStackTrace();
                 }
                 Nearby.getConnectionsClient(getContext()).disconnectFromEndpoint(id);
-               // Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
-                RelativeLayout.LayoutParams rlp1=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
-                rlp1.setMargins(50,0,0,0);
+                // Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
+                RelativeLayout.LayoutParams rlp1 = (RelativeLayout.LayoutParams) rejectCallButton.getLayoutParams();
+                rlp1.setMargins(50, 0, 0, 0);
                 rejectCallButton.setLayoutParams(rlp1);
                 acceptCallButton.setVisibility(View.VISIBLE);
                 buttonCall.setVisibility(View.INVISIBLE);
-               // devInfo.setVisibility(View.VISIBLE);
+                // devInfo.setVisibility(View.VISIBLE);
                 discoverButton.setVisibility(View.VISIBLE);
                 searchLayout.setVisibility(View.GONE);
                 searchAnim.setVisibility(View.GONE);
@@ -169,27 +172,29 @@ public class Call extends Fragment {
                 chronometer.setBase(SystemClock.elapsedRealtime());
                 chronometer.start();
                 track.play();
+
             }
             if (index == 0) {
                 buttonCall.setVisibility(View.INVISIBLE);
                 buttonReceiveCall.setVisibility(View.INVISIBLE);
                 devInfo.setVisibility(View.INVISIBLE);
                 callScreen.setVisibility(View.VISIBLE);
-                RelativeLayout.LayoutParams rlp1=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
-                rlp1.setMargins(0,0,0,0);
+                RelativeLayout.LayoutParams rlp1 = (RelativeLayout.LayoutParams) rejectCallButton.getLayoutParams();
+                rlp1.setMargins(0, 0, 0, 0);
                 rejectCallButton.setLayoutParams(rlp1);
                 acceptCallButton.setVisibility(View.GONE);
                 index++;
                 Vibrator vi = (Vibrator) getActivity().getSystemService(getContext().VIBRATOR_SERVICE);
-                    // Vibrate for 500 milliseconds
+                // Vibrate for 500 milliseconds
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vi.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else {
                     vi.vibrate(1000);
                 }
             } else {
-                if(answered || isCaller){
-                    track.write(payload.asBytes(), 0, payload.asBytes().length);}
+                if (answered || isCaller) {
+                    track.write(payload.asBytes(), 0, payload.asBytes().length);
+                }
             }
         }
 
@@ -238,7 +243,7 @@ public class Call extends Fragment {
                     id = s;
                     //buttonCall.setVisibility(View.VISIBLE);
                     buttonCall.callOnClick();
-                   // buttonReceiveCall.setVisibility(View.VISIBLE);
+                    // buttonReceiveCall.setVisibility(View.VISIBLE);
                     //devInfo.setVisibility(View.VISIBLE);
                     discoverButton.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.GONE);
@@ -246,7 +251,7 @@ public class Call extends Fragment {
                     Nearby.getConnectionsClient(getContext()).stopDiscovery();
                     connectButton.setVisibility(View.GONE);
                     chronometer.setVisibility(View.VISIBLE);
-                    callerInfo.setText("Call to "+s);
+                    callerInfo.setText("Call to " + s);
                     callScreen.setVisibility(View.VISIBLE);
                     break;
                 case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
@@ -293,7 +298,7 @@ public class Call extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.mbutton_call:
-                    callerInfo.setText("call from "+id);
+                    callerInfo.setText("call from " + id);
                     startStreaming();
                     isCaller = true;
                     break;
@@ -306,9 +311,9 @@ public class Call extends Fragment {
                             AudioTrack.MODE_STREAM);
                     index++;
                     track.play();
-                    answered=true;
-                    RelativeLayout.LayoutParams rlp=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
-                    rlp.setMargins(0,0,0,0);
+                    answered = true;
+                    RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) rejectCallButton.getLayoutParams();
+                    rlp.setMargins(0, 0, 0, 0);
                     rejectCallButton.setLayoutParams(rlp);
                     acceptCallButton.setVisibility(View.GONE);
                     chronometer.setBase(SystemClock.elapsedRealtime());
@@ -321,17 +326,17 @@ public class Call extends Fragment {
                         recorder.stop();
                         track.stop();
                     }
-                  //  Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
-                    RelativeLayout.LayoutParams rlp1=(RelativeLayout.LayoutParams)rejectCallButton.getLayoutParams();
-                    rlp1.setMargins(50,0,0,0);
+                    //  Nearby.getConnectionsClient(getContext()).stopAllEndpoints();
+                    RelativeLayout.LayoutParams rlp1 = (RelativeLayout.LayoutParams) rejectCallButton.getLayoutParams();
+                    rlp1.setMargins(50, 0, 0, 0);
                     rejectCallButton.setLayoutParams(rlp1);
                     acceptCallButton.setVisibility(View.VISIBLE);
-                    String s="end";
-                    Payload p=Payload.fromBytes(s.getBytes(StandardCharsets.UTF_8));
+                    String s = "end";
+                    Payload p = Payload.fromBytes(s.getBytes(StandardCharsets.UTF_8));
                     Nearby.getConnectionsClient(getContext()).sendPayload(id, p);
                     buttonCall.setVisibility(View.INVISIBLE);
                     // buttonReceiveCall.setVisibility(View.VISIBLE);
-                  //  devInfo.setVisibility(View.VISIBLE);
+                    //  devInfo.setVisibility(View.VISIBLE);
                     discoverButton.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     searchAnim.setVisibility(View.GONE);
@@ -383,19 +388,57 @@ public class Call extends Fragment {
         discoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Nearby.getConnectionsClient(getContext())
-                        .startDiscovery(getContext().getPackageName(), endpointDiscoveryCallback,
-                                new DiscoveryOptions(Strategy.P2P_CLUSTER));
-                discoverButton.setVisibility(View.GONE);
-                searchAnim.setVisibility(View.VISIBLE);
-                isDiscoverer = true;
+                if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Nearby.getConnectionsClient(getContext())
+                            .startDiscovery(getContext().getPackageName(), endpointDiscoveryCallback,
+                                    new DiscoveryOptions(Strategy.P2P_CLUSTER));
+                    discoverButton.setVisibility(View.GONE);
+                    searchAnim.setVisibility(View.VISIBLE);
+                    isDiscoverer = true;
+                }
+                mInterstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdClosed() {
+                        requestNewInterstitial();
+                        Nearby.getConnectionsClient(getContext())
+                                .startDiscovery(getContext().getPackageName(), endpointDiscoveryCallback,
+                                        new DiscoveryOptions(Strategy.P2P_CLUSTER));
+                        discoverButton.setVisibility(View.GONE);
+                        searchAnim.setVisibility(View.VISIBLE);
+                        isDiscoverer = true;
+                    }
+                });
+
             }
         });
         buttonCall = rootView.findViewById(R.id.mbutton_call);
         buttonCall.setOnClickListener(onClickListener);
         buttonReceiveCall = rootView.findViewById(R.id.mbutton_rec);
         buttonReceiveCall.setOnClickListener(onClickListener);
+
+        //TODO: Ads intialization
+        mInterstitialAd = new InterstitialAd(getContext());
+        mInterstitialAd.setAdUnitId(getString(R.string.interstial));
+        try {
+            if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
+                AdRequest adRequest = new AdRequest.Builder().build();
+                mInterstitialAd.loadAd(adRequest);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        requestNewInterstitial();
         return rootView;
+    }
+
+    //TODO: Requesting Ads method
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mInterstitialAd.loadAd(adRequest);
     }
 
     @Override
@@ -422,43 +465,37 @@ public class Call extends Fragment {
         Thread streamThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                 //   DatagramSocket socket = new DatagramSocket();
-                  //  Log.d("VS", "Socket Created");
-                    byte[] buffer = new byte[minBufSize];
-                    Log.d("VS", "Buffer created of size " + minBufSize);
-                  //  DatagramPacket packet;
-                    final InetAddress destination = InetAddress.getByName("192.168.10.21");
-                //    Log.d("VS", "Address retrieved");
-                    recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
-                    Log.d("VS", "Recorder initialized");
-                    recorder.startRecording();
-                //    FileOutputStream os = new FileOutputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
-                 //   InputStream is = new FileInputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
-                    while (status) {
-                        //reading data from MIC into buffer
-                        try {
-                            minBufSize = recorder.read(buffer, 0, buffer.length);
-                            Payload bytesPayload = Payload.fromBytes(buffer);
-                            Nearby.getConnectionsClient(getContext()).sendPayload(id, bytesPayload);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            try {
-                                recorder.stop();
-                                recorder.release();
-                            } catch (IllegalStateException e1) {
-                                e1.printStackTrace();
-                            }
-                            break;
-                        }
-                    }
 
-                } catch (UnknownHostException e) {
-                    Log.e("VS", "UnknownHostException");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.e("VS", "IOException");
+                //  Log.d("VS", "Socket Created");
+                byte[] buffer = new byte[minBufSize];
+                Log.d("VS", "Buffer created of size " + minBufSize);
+                //  DatagramPacket packet;
+                //final InetAddress destination = InetAddress.getByName("192.168.10.21");
+                //    Log.d("VS", "Address retrieved");
+                recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
+                Log.d("VS", "Recorder initialized");
+                recorder.startRecording();
+                //    FileOutputStream os = new FileOutputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
+                //   InputStream is = new FileInputStream(Environment.getExternalStorageDirectory() + "/share/os.pcm");
+                while (status) {
+                    //reading data from MIC into buffer
+                    try {
+                        minBufSize = recorder.read(buffer, 0, buffer.length);
+                        Payload bytesPayload = Payload.fromBytes(buffer);
+                        Nearby.getConnectionsClient(getContext()).sendPayload(id, bytesPayload);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        try {
+                            recorder.stop();
+                            recorder.release();
+                        } catch (IllegalStateException e1) {
+                            e1.printStackTrace();
+                        }
+                        break;
+                    }
                 }
+
+
             }
 
 
@@ -489,7 +526,7 @@ public class Call extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    callerInfo.setText("Connecting to "+devNametoPos.get(discoveredDevices.get(i)));
+                    callerInfo.setText("Connecting to " + devNametoPos.get(discoveredDevices.get(i)));
                     callScreen.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     devInfo.setVisibility(View.GONE);

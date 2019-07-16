@@ -21,6 +21,7 @@ public class Transfer extends Fragment implements View.OnClickListener {
     Button buttonSend;
     Button buttonReceive;
     InterstitialAd mInterstitialAd;
+    static public boolean adpress;
 
     public Transfer() {
         // Required empty public constructor
@@ -45,6 +46,7 @@ public class Transfer extends Fragment implements View.OnClickListener {
         buttonSend.setOnClickListener(this);
         buttonReceive = root.findViewById(R.id.button_receive);
         buttonReceive.setOnClickListener(this);
+        adpress = false;
 
         //TODO: Ads intialization
         mInterstitialAd = new InterstitialAd(getContext());
@@ -69,6 +71,7 @@ public class Transfer extends Fragment implements View.OnClickListener {
             case R.id.button_send:
                 if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
+                    adpress = true;
                 } else {
                     Intent shareIntent = new Intent(getContext(), FileSelectActivity.class);
                     startActivity(shareIntent);

@@ -137,6 +137,7 @@ public class Videos extends Fragment {
         List<Video> vidList=new ArrayList<>();
         int column_index_data;
         String absolutePathOfVideo = null;
+       // Environment.getExternalStorageDirectory() + File.separator + "folder_name/";
         uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String sortOrder=MediaStore.MediaColumns.DATE_MODIFIED+" DESC";
         cursor = activity.getContentResolver().query(uri, null, null,

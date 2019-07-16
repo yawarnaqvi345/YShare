@@ -161,7 +161,6 @@ public class ReceiveActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
                             Nearby.getConnectionsClient(ReceiveActivity.this).acceptConnection(s, mPayLoadCallback);
-                            //Toast.makeText(ReceiveActivity.this,"You clicked yes button",Toast.LENGTH_LONG).show();
                         }
                     });
 
