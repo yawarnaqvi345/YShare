@@ -53,7 +53,6 @@ public class Videos extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         asyn = new AsyncTaskRunner();
         asyn.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
         return rootView;
     }
     private class VideoRecyclerAdapter extends  RecyclerView.Adapter<MyViewHolder>{
@@ -79,7 +78,7 @@ public class Videos extends Fragment {
                 Glide.with(context).load(videosList.get(i).getPath())
                         .placeholder(R.drawable.ic_launcher_foreground).centerCrop()
                         .into(myViewHolder.vidThumb);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
             myViewHolder.vidCheckBox.setChecked(false);
@@ -109,7 +108,6 @@ public class Videos extends Fragment {
                     }
                     else{
                         FileSelectActivity.mPathsList.remove(FileSelectActivity.getRefference(path));
-
                     }
                     FileSelectActivity.UpdateView();
                 }

@@ -5,9 +5,9 @@
     <string name="Banner">ca-app-pub-3940256099942544/6300978111</string>-->
 
     <!--TODO: original ads ids-->
-         <string name="Banner">ca-app-pub-7294466580019091/1872864692</string>
+      <!--   <string name="Banner">ca-app-pub-7294466580019091/1872864692</string>
          <string name="interstial">ca-app-pub-7294466580019091/7152933926</string>
-
+-->
 
     <string name="app_name">YShare</string>
     <string name="title_home">Home</string>

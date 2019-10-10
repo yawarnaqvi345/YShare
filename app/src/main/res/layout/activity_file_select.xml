@@ -73,15 +73,9 @@
 
     </LinearLayout>
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:id="@+id/banner"
-        layout="@layout/banner" />
 
     <LinearLayout
-        android:layout_below="@id/banner"
+    android:layout_alignParentTop="true"
         android:id="@+id/selected_display_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

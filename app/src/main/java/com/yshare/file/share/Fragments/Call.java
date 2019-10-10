@@ -68,9 +68,7 @@ import java.util.List;
 
 
 public class Call extends Fragment {
-    public static DatagramSocket socket;
     private final SimpleArrayMap<String, String> devNametoPos = new SimpleArrayMap<>();
-    public byte[] buffer;
     LinearLayout devInfo;
     TextView devName;
     Button connectButton;
@@ -96,7 +94,6 @@ public class Call extends Fragment {
     CircularRevealCardView acceptCallButton, rejectCallButton;
     boolean isCaller = false;
     boolean answered = false;
-    InterstitialAd mInterstitialAd;
     Chronometer chronometer;
 
     AudioTrack track;
@@ -388,29 +385,12 @@ public class Call extends Fragment {
         discoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                } else {
                     Nearby.getConnectionsClient(getContext())
                             .startDiscovery(getContext().getPackageName(), endpointDiscoveryCallback,
                                     new DiscoveryOptions(Strategy.P2P_CLUSTER));
                     discoverButton.setVisibility(View.GONE);
                     searchAnim.setVisibility(View.VISIBLE);
                     isDiscoverer = true;
-                }
-                mInterstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        requestNewInterstitial();
-                        Nearby.getConnectionsClient(getContext())
-                                .startDiscovery(getContext().getPackageName(), endpointDiscoveryCallback,
-                                        new DiscoveryOptions(Strategy.P2P_CLUSTER));
-                        discoverButton.setVisibility(View.GONE);
-                        searchAnim.setVisibility(View.VISIBLE);
-                        isDiscoverer = true;
-                    }
-                });
-
             }
         });
         buttonCall = rootView.findViewById(R.id.mbutton_call);
@@ -418,28 +398,11 @@ public class Call extends Fragment {
         buttonReceiveCall = rootView.findViewById(R.id.mbutton_rec);
         buttonReceiveCall.setOnClickListener(onClickListener);
 
-        //TODO: Ads intialization
-        mInterstitialAd = new InterstitialAd(getContext());
-        mInterstitialAd.setAdUnitId(getString(R.string.interstial));
-        try {
-            if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
-                AdRequest adRequest = new AdRequest.Builder().build();
-                mInterstitialAd.loadAd(adRequest);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
-        requestNewInterstitial();
+
         return rootView;
     }
 
-    //TODO: Requesting Ads method
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-    }
 
     @Override
     public void onResume() {

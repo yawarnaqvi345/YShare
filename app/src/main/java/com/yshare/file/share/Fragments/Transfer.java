@@ -20,8 +20,8 @@ public class Transfer extends Fragment implements View.OnClickListener {
 
     Button buttonSend;
     Button buttonReceive;
-    InterstitialAd mInterstitialAd;
-    static public boolean adpress;
+
+
 
     public Transfer() {
         // Required empty public constructor
@@ -46,21 +46,9 @@ public class Transfer extends Fragment implements View.OnClickListener {
         buttonSend.setOnClickListener(this);
         buttonReceive = root.findViewById(R.id.button_receive);
         buttonReceive.setOnClickListener(this);
-        adpress = false;
 
-        //TODO: Ads intialization
-        mInterstitialAd = new InterstitialAd(getContext());
-        mInterstitialAd.setAdUnitId(getString(R.string.interstial));
-        try {
-            if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
-                AdRequest adRequest = new AdRequest.Builder().build();
-                mInterstitialAd.loadAd(adRequest);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
-        requestNewInterstitial();
+
         return root;
     }
 
@@ -69,45 +57,17 @@ public class Transfer extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_send:
-                if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    adpress = true;
-                } else {
                     Intent shareIntent = new Intent(getContext(), FileSelectActivity.class);
                     startActivity(shareIntent);
-                }
-                mInterstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        requestNewInterstitial();
-                        Intent shareIntent = new Intent(getContext(), FileSelectActivity.class);
-                        startActivity(shareIntent);
-                    }
-                });
                 break;
             case R.id.button_receive:
-                if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                } else {
+
                     Intent intent = new Intent(getContext(), ReceiveActivity.class);
                     startActivity(intent);
-                }
-                mInterstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        requestNewInterstitial();
-                        Intent intent = new Intent(getContext(), ReceiveActivity.class);
-                        startActivity(intent);
-                    }
-                });
                 break;
         }
     }
 
-    //TODO: Requesting Ads method
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-    }
+
+
 }

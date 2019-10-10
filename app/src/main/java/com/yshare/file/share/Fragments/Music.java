@@ -82,34 +82,18 @@ public class Music extends Fragment {
                null,
                sortOrder);
        if (cursor == null) {
-
            Toast.makeText(getContext(),"Something Went Wrong.", Toast.LENGTH_LONG);
-
        } else if (!cursor.moveToFirst()) {
-
            Toast.makeText(getContext(),"No Music Found on SD Card.", Toast.LENGTH_LONG);
-
        }
        else {
-
            int Title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
            int size = cursor.getColumnIndex(MediaStore.Audio.Media.SIZE);
            int length = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
            int path = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
            int dateint=cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED);
-
-
-           //Getting Song ID From Cursor.
-           //int id = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
-
            do {
-
-               // You can also get the Song ID using cursor.getLong(id).
-               //long SongID = cursor.getLong(id);
-
                String SongTitle = cursor.getString(Title);
-              // String types=cursor.getString(type);
-              // String songPath=uri+"/"+SongTitle+"."+types;
                String songPath=cursor.getString(path);
                String songSize=cursor.getString(size);
                String songLength=cursor.getString(length);

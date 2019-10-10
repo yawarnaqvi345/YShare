@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
 
     private TextView mTextMessage;
     Permissions runtimePermissionHelper;
-    AdView adView;
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
             return true;
         }
     };
-    Handler handler;
+
 
 
     @Override
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity {
                 runtimePermissionHelper.requestPermissionsIfDenied();
             }
         }
-        adView();
+
         mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -100,28 +100,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void adView() {
-        adView = findViewById(R.id.banner);
-        final AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-        adView.setAdListener(new AdListener() {
 
-            @Override
-            public void onAdLoaded() {
-                adView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAdFailedToLoad(int error) {
-                adView.setVisibility(View.GONE);
-            }
-
-        });
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
+
     }
 }

@@ -44,10 +44,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class FinalSendActivity extends BaseActivity {
-    ConstraintLayout view;
-    Activity mActivity=this;
     TextView finalshareTextView;
-    File fileToSend;
     List<FileToSendPath> mPathsList;
     Payload filePayload;
     String connectedDeviceId;

@@ -67,7 +67,6 @@ public class Messaging extends Fragment {
     MyDevRecyclerAdapter devAdapter;
     List<String> discoveredDevices = new ArrayList<String>();
     private final SimpleArrayMap<String, String> devNametoPos = new SimpleArrayMap<>();
-    InterstitialAd mInterstitialAd;
 
     public Messaging() {
         // Required empty public constructor
@@ -242,21 +241,6 @@ public class Messaging extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_messaging, container, false);
         // Inflate the layout for this fragment
-
-        //TODO: Ads intialization
-        mInterstitialAd = new InterstitialAd(getContext());
-        mInterstitialAd.setAdUnitId(getString(R.string.interstial));
-        try {
-            if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
-                AdRequest adRequest = new AdRequest.Builder().build();
-                mInterstitialAd.loadAd(adRequest);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        requestNewInterstitial();
-
         devInfo = rootView.findViewById(R.id.dev_info);
         devName = rootView.findViewById(R.id.dev_name);
         connectButton = rootView.findViewById(R.id.connect_button);
@@ -306,28 +290,14 @@ public class Messaging extends Fragment {
         discoverButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                } else {
+
                     Nearby.getConnectionsClient(getContext())
                             .startDiscovery(getContext().getPackageName(), endpointDiscoveryCallback,
                                     new DiscoveryOptions(Strategy.P2P_CLUSTER));
                     discoverButton.setVisibility(View.GONE);
                     searchAnim.setVisibility(View.VISIBLE);
                     isDiscoverer = true;
-                }
-                mInterstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        requestNewInterstitial();
-                        Nearby.getConnectionsClient(getContext())
-                                .startDiscovery(getContext().getPackageName(), endpointDiscoveryCallback,
-                                        new DiscoveryOptions(Strategy.P2P_CLUSTER));
-                        discoverButton.setVisibility(View.GONE);
-                        searchAnim.setVisibility(View.VISIBLE);
-                        isDiscoverer = true;
-                    }
-                });
+
             }
         });
         return rootView;
@@ -352,12 +322,6 @@ public class Messaging extends Fragment {
         super.onDestroy();
     }
 
-    //TODO: Requesting Ads method
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-    }
 
     public class MyRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
         List<TextMessage> mText;

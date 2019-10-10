@@ -41,8 +41,6 @@ public class FileSelectActivity extends BaseActivity {
     TabLayout tabLayout;
     ViewPagerAdapter adapter;
    ViewPager viewPager;
-     AdView adView;
-    InterstitialAd mInterstitialAd;
 
     @Override
     public void onBackPressed() {
@@ -78,16 +76,6 @@ public class FileSelectActivity extends BaseActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(!Transfer.adpress) {
-            try {
-                mPathsList.clear();
-                clearList();
-               // UpdateView();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        Transfer.adpress= false;
         UpdateView();
     }
 
@@ -108,20 +96,8 @@ public class FileSelectActivity extends BaseActivity {
         Log.d(TAG, "OnCreate");
         setContentView(R.layout.activity_file_select);
        themeColorHeader(R.color.colorPrimary);
-        adView();
-        //TODO: Ads intialization
-        mInterstitialAd = new InterstitialAd(getApplicationContext());
-        mInterstitialAd.setAdUnitId(getString(R.string.interstial));
-        try {
-            if (!mInterstitialAd.isLoading() && !mInterstitialAd.isLoaded()) {
-                AdRequest adRequest = new AdRequest.Builder().build();
-                mInterstitialAd.loadAd(adRequest);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
 
-        requestNewInterstitial();
+
 
         setTitle("Files");
         viewPager = findViewById(R.id.send_activity_view_pager);
@@ -180,20 +156,11 @@ public class FileSelectActivity extends BaseActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                } else {
+
                     Intent shareIntent = new Intent(getApplicationContext(), FinalSendActivity.class);
                     startActivity(shareIntent);
-                }
-                mInterstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        requestNewInterstitial();
-                        Intent shareIntent = new Intent(getApplicationContext(), FinalSendActivity.class);
-                        startActivity(shareIntent);
-                    }
-                });
+
+
             }
         });
 
@@ -201,12 +168,6 @@ public class FileSelectActivity extends BaseActivity {
 
     }
 
-    //TODO: Requesting Ads method
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-    }
 
   /*  private void adView() {
         adView = findViewById(R.id.adView);
@@ -227,24 +188,7 @@ public class FileSelectActivity extends BaseActivity {
         });
     }*/
 
-    private void adView() {
-        adView = findViewById(R.id.banner);
-        final AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-        adView.setAdListener(new AdListener() {
 
-            @Override
-            public void onAdLoaded() {
-                adView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAdFailedToLoad(int error) {
-                adView.setVisibility(View.GONE);
-            }
-
-        });
-    }
   void clearList(){
       mPathsList.clear();
       UpdateView();
